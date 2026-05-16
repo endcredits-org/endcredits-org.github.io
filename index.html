@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2026 Maciej Delmanowski <drybjed@gmail.com>
+SPDX-License-Identifier: CC-BY-SA-4.0
+Project website: https://endcredits.org/
+
+This is an art project by Maciej Delmanowski.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>End Credits</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#credits {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#credits-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 0 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@keyframes scroll {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-100%); }
+}
+
+#title-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+#title-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#flag {
+  width: min(210px, 42vw);
+  aspect-ratio: 3 / 2;
+  margin: 60px auto 0 auto;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+
+#flag.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+html {
+  font-size: clamp(14px, 2.5vw, 20px);
+}
+
+h2 {
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin: 50px 0 24px 0;
+}
+
+h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 30px 0 16px 0;
+}
+
+h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.opening-title {
+  text-align: center;
+  margin: 100px auto 60px auto;
+  max-width: 800px;
+}
+
+.opening-title .tagline {
+  font-size: 0.75em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.opening-title .film-title {
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.credit {
+  max-width: 800px;
+  margin: 0 auto 10px auto;
+  line-height: 1.3;
+}
+
+.role {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.name {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.layout-classic .credit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.layout-classic .role {
+  text-align: right;
+}
+
+.layout-classic .name {
+  text-align: left;
+}
+
+.layout-justified .credit {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.layout-single .credit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.layout-single .role {
+  text-align: center;
+}
+
+.layout-single .name {
+  text-align: center;
+}
+
+.annotations {
+  text-align: center;
+  margin: 60px auto 40px auto;
+  max-width: 800px;
+}
+
+.annotation {
+  font-size: 0.85em;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.annotation-attribution {
+  font-size: 0.85em;
+}
+
+.music-section {
+  margin: 0 auto 40px auto;
+  max-width: 800px;
+}
+
+.music-section.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.music-entry {
+  text-align: center;
+}
+
+.music-section:not(.two-column) .music-entry {
+  margin-bottom: 28px;
+}
+
+.music-section .song-title {
+  font-style: italic;
+  font-size: 1em;
+  margin-bottom: 2px;
+}
+
+.music-section .song-detail {
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+.bold-name .credit .role {
+  font-weight: normal;
+}
+
+.bold-name .credit .name {
+  font-weight: bold;
+}
+
+.featured-card {
+  text-align: center;
+  margin: 40px auto;
+  max-width: 800px;
+}
+
+.featured-card .role {
+  display: block;
+  text-align: center;
+  font-size: 1em;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.featured-card .name {
+  display: block;
+  text-align: center;
+  font-size: 1em;
+  font-weight: normal;
+  margin-top: 4px;
+}
+
+.bold-name .featured-card .role {
+  font-weight: normal;
+}
+
+.bold-name .featured-card .name {
+  font-weight: bold;
+}
+
+.credit a, .featured-card a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+
+.movie-title {
+  line-height: 1.3;
+}
+
+.movie-title a {
+  color: inherit;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div id="credits">
+  <div id="credits-content"></div>
+</div>
+<div id="title-overlay"><div class="movie-title"></div><div id="flag"></div></div>
+<script>
+const names = [
+  "Liddy Bacroff",
+  "H. Bode",
+  "Sanro Makgangke",
+  "Tanya Moore",
+  "Tina Rodriguez",
+  "Sonia Rescalvo Zafra",
+  "Brandon Teena",
+  "Chanelle Pickett",
+  "Deborah \"Debbie\" Forte",
+  "Rita Hester",
+  "Amanda Milan",
+  "Fred Martinez Jr.",
+  "Gwen Araujo",
+  "Nireah Johnson",
+  "Brandie Coleman",
+  "Janice Roberts",
+  "Shelby Tracy Tom",
+  "Gisberta Salce Júnior",
+  "Roberto González Onrubia",
+  "Angie Zapata",
+  "Vicky Hernández",
+  "Victoria Carmen White",
+  "Dee Dee Pearson",
+  "Svetlana",
+  "Brandy Martell",
+  "Carmen Guerrero",
+  "Islan Nettles",
+  "Dwayne Jones",
+  "Jennifer Laude",
+  "Çağla Joker",
+  "Kimberly Sody",
+  "Cenida Ramos",
+  "Mercedes Williamson",
+  "Diana Sacayán",
+  "Paola Ledezma",
+  "Rae'Lynn Thomas",
+  "Jessica Mendes Cavalcanti",
+  "Amna",
+  "Meeno",
+  "Chanda Sharmeeli",
+  "Bianca",
+  "Dandara dos Santos",
+  "Wilka",
+  "Laysa Fortuna",
+  "Nataly Briyth Sánchez",
+  "Kelly Stough",
+  "Anastasiya Sapaeva",
+  "Nikki Kuhnhausen",
+  "Nina Surgutskaya",
+  "Chynal Lindsey",
+  "Dime Doe",
+  "Alexa Luciano Ruiz",
+  "Selena Reyes-Hernandez",
+  "Brayla Stone",
+  "Valera",
+  "Serena Angelique Velázquez",
+  "Layla Pelaez",
+  "Tehuel de la Torre",
+  "Ebeng Mayor",
+  "Doski Azad",
+  "Luo",
+  "Ariyanna Mitchell",
+  "Cherry Bush",
+  "Daniel Aston",
+  "Kelly Loving",
+  "Brianna Ghey",
+  "Abuja Area Mama",
+  "Kesaria Abramidze",
+  "Sara Millerey González",
+  "Daquan \"Dream\" Johnson",
+  "Juniper Blessing",
+  "Shyyell Diamond Sanchez-McCray"
+];
+
+const characters = [
+  "The Hero",
+  "The Sidekick",
+  "The Mentor",
+  "The Villain",
+  "The Love Interest",
+  "The Comic Relief",
+  "The Rival",
+  "The Detective",
+  "The Scientist",
+  "The Doctor",
+  "The Pilot",
+  "The Captain",
+  "The Spy",
+  "The Engineer",
+  "The Guardian",
+  "The Outlaw",
+  "The Stranger",
+  "The Guide",
+  "The Sage",
+  "The Rebel",
+  "The Oracle",
+  "The Dreamer",
+  "The Witness",
+  "The Martyr",
+  "The Survivor"
+];
+
+const transCharacters = [
+  "Adam Torres",
+  "Adira Tal",
+  "Agrado",
+  "Albert Nobbs",
+  "Alexandra",
+  "Alexis Meade",
+  "Alice Júnior",
+  "Allyson Del Lago",
+  "Angel Evangelista",
+  "Angelica Bain",
+  "Angelique",
+  "Anna Madrigal",
+  "Antoine",
+  "Anybodys",
+  "Arun Parmar",
+  "Ava Moore",
+  "Bailey Delvecchio",
+  "Barbara Dixon",
+  "Ben Marks",
+  "Bernadette Bassenger",
+  "Bernadette Wöller",
+  "Blanca Evangelista",
+  "Blessing Chambers",
+  "Brandon Teena",
+  "Bubbles Cliquot",
+  "Buck Vu",
+  "Caeneus",
+  "Calpernia",
+  "Cameron Wirth",
+  "Candy Abundance",
+  "Candy Darling",
+  "Carmelita Rainer",
+  "Casey Parker",
+  "Cassandra O'Brien",
+  "Caz Davis",
+  "Cecilia Chung",
+  "Chablis Deveau",
+  "Charles Beaumont",
+  "Charlene",
+  "Charlotte DiLaurentis",
+  "Cherry Peck",
+  "Cheryl Avery",
+  "Chi-Chi Rodriguez",
+  "Cho Hyun-ju",
+  "Christine Jorgensen",
+  "Cindy McCauliff",
+  "Cotton Brown",
+  "Crystal Clark",
+  "Davina",
+  "Denise Bryson",
+  "Denise Lockwood",
+  "Dil",
+  "Dolly Holloway",
+  "Dongfang Bubai",
+  "Dr. Frank N Furter",
+  "Dr. Mona Lavelle",
+  "Drew Reeves",
+  "Edie Stokes",
+  "Elektra Abundance",
+  "Elle Argent",
+  "Elvira Weishaupt",
+  "Emilia Pérez",
+  "Erica Bettis",
+  "Feña",
+  "Frankie Fox",
+  "Frankie Stevens",
+  "Frau Winkler",
+  "Gabriel Montoya",
+  "Georgette",
+  "Gil Kessler",
+  "Gittel",
+  "Glenda",
+  "Gray Tal",
+  "Hanabusa",
+  "Harper Poythress",
+  "Hayley Cropper",
+  "Hedwig Robinson",
+  "Helen Brears",
+  "Henrietta Rossi",
+  "Hershe Las Palmas",
+  "Hikari Kuina",
+  "Hubert Page",
+  "Ivan Aycock",
+  "Jaiyah Saelua",
+  "Jake Wheeler",
+  "Janzen Torres",
+  "Jason Costello",
+  "Jazmin Martinez",
+  "Jill Hartford",
+  "Joan Lambert",
+  "Job",
+  "Jules Vaughn",
+  "Julia Smith",
+  "Kim Foyle",
+  "Kitten Braden",
+  "Kris Ahadi",
+  "Kyle Slater",
+  "Lara",
+  "Laurence Alia",
+  "Leni Malinowski",
+  "Leon Shermer",
+  "Lexus",
+  "Lilica",
+  "Lili Elbe",
+  "Liz Taylor",
+  "Lola",
+  "Loridonna",
+  "Louis McGerry",
+  "Ludo Fabre",
+  "Luis Molina",
+  "Lukas",
+  "Lulu Abundance",
+  "Luna La",
+  "Ma Hyun-yi",
+  "Mackenzie Hargreaves",
+  "Madame Rose",
+  "Mae Martin",
+  "Marci Wise",
+  "Margo",
+  "María José",
+  "Marina Vidal",
+  "Matty Barton",
+  "Maura Lee Karupt",
+  "Maura Pfefferman",
+  "Max Bernini",
+  "Max Sweeney",
+  "Maxine Conway",
+  "Maya Avant",
+  "Melody Rose",
+  "Micah Lee",
+  "Michael Hallowell",
+  "Mikäel",
+  "Miss Artiphys",
+  "Miss Robyn Ross",
+  "Mo",
+  "Mole McHenry",
+  "Molly Milkovich",
+  "Montana Moorehead",
+  "Morgan Finn",
+  "Ms. Hudson",
+  "Myra Breckinridge",
+  "Naomi Russell",
+  "Nia Nal",
+  "Ninete",
+  "Nomi Marks",
+  "Nong Toom",
+  "Orlando",
+  "Óscar Ruiz",
+  "Parinya Charoenphol",
+  "Pat Caddison",
+  "Paul Millander",
+  "Paul Strickland",
+  "Patsy Stone",
+  "Pierce Williams",
+  "Rayon",
+  "Renée Richards",
+  "René Henderson",
+  "Reverend Michael Stills",
+  "Rinko",
+  "Robert Calvert",
+  "Roberta Muldoon",
+  "Rosalind",
+  "Rosie Preston",
+  "Rubia",
+  "Rusty Zimmerman",
+  "Ruthie",
+  "Sabrina Osbourne",
+  "Sally St. Claire",
+  "Sam Jordan",
+  "Sam Malloy",
+  "Sasha Booker",
+  "Shea",
+  "Sheldon Beiste",
+  "Shy",
+  "Simone",
+  "Sin-Dee Roda",
+  "Sofia Lopez",
+  "Sophia Burset",
+  "Stat",
+  "Stephanie Grant",
+  "Strella",
+  "Sü",
+  "Taylor Mason",
+  "Theo Putnam",
+  "Tina Quintero",
+  "Tobio",
+  "Toni Rykener",
+  "Tony Sawicki",
+  "Trisha Echeverria",
+  "Unique Adams",
+  "Vera Reynolds",
+  "Vic",
+  "Victory",
+  "Viktor Hargreeves",
+  "Wendy",
+  "Wendy Garner",
+  "Whiterose",
+  "Wilhelmina",
+  "Ysela",
+  "Zoe Luper"
+];
+
+const crewJobs = [
+  "Executive Producer",
+  "Producer",
+  "Screenwriter",
+  "Director of Photography",
+  "Production Designer",
+  "Editor",
+  "Composer",
+  "Costume Designer",
+  "Makeup Artist",
+  "Sound Designer",
+  "Visual Effects Supervisor",
+  "Stunt Coordinator",
+  "Choreographer",
+  "Casting Director",
+  "Line Producer",
+  "First Assistant Director",
+  "Second Assistant Director",
+  "Music Supervisor",
+  "Script Supervisor",
+  "Location Manager",
+  "Gaffer",
+  "Key Grip",
+  "Best Boy",
+  "Publicist",
+  "Director"
+];
+
+const numberedCrew = [
+  "Grip #1",
+  "Grip #2",
+  "Grip #3",
+  "Best Boy Electric",
+  "Rigging Grip",
+  "Dolly Grip",
+  "Camera Operator",
+  "First Assistant Camera",
+  "Second Assistant Camera",
+  "Steadicam Operator",
+  "Digital Imaging Technician",
+  "Lighting Technician",
+  "Boom Operator",
+  "Sound Mixer",
+  "Foley Artist",
+  "Set Dresser",
+  "Prop Master",
+  "Scenic Artist",
+  "Makeup Artist",
+  "Hairstylist",
+  "Wardrobe Supervisor",
+  "Costume Assistant",
+  "Production Assistant",
+  "Driver",
+  "Craft Service",
+  "VFX Artist",
+  "Sound Editor",
+  "Colorist",
+  "Assistant Editor",
+  "Stunt Double",
+  "Stunt Performer",
+  "Armorer",
+  "Script Supervisor",
+  "Choreographer"
+];
+
+const filmDepartments = {
+  "Grip & Electric": ["Key Grip", "Best Boy Electric", "Rigging Grip", "Lighting Technician", "Dolly Grip", "Generator Operator", "Balloon Light Technician", "Rigging Best Boy", "Lamp Operator", "Set Lighting Technician"],
+  "Camera": ["Camera Operator", "First Assistant Camera", "Second Assistant Camera", "Steadicam Operator", "Digital Imaging Technician", "Camera Trainee", "Film Loader", "Motion Control Operator", "Underwater Camera Operator", "Aerial Camera Operator"],
+  "Art": ["Art Director", "Set Decorator", "Prop Master", "Set Dresser", "Scenic Artist", "Graphic Artist", "Set Designer", "Storyboard Artist", "Leadman", "Assistant Art Director"],
+  "Sound": ["Production Sound Mixer", "Boom Operator", "Utility Sound Technician", "ADR Mixer", "Foley Artist", "Dialogue Editor", "Re-recording Mixer", "Sound Effects Editor", "Foley Walker", "ADR Recordist"],
+  "Makeup": ["Makeup Department Head", "Key Makeup Artist", "Makeup Artist", "Prosthetics Designer", "Prosthetics Technician", "Hair Department Head", "Key Hairstylist", "Hairstylist", "Wig Maker", "Special Effects Makeup Artist"],
+  "Wardrobe": ["Wardrobe Supervisor", "Key Costumer", "Costume Supervisor", "Seamstress", "Tailor", "Stitcher", "Set Costumer", "Costume Illustrator", "Wardrobe Assistant", "Costume Shopper"],
+  "Visual Effects": ["VFX Supervisor", "Compositing Supervisor", "3D Artist", "Rotoscope Artist", "VFX Editor", "Matchmove Artist", "Texture Artist", "Lighting Artist", "FX Artist", "Matte Painter"],
+  "Stunts": ["Stunt Coordinator", "Stunt Performer", "Fight Choreographer", "Stunt Double", "Utility Stunt Performer", "Precision Driver", "Stunt Rigger", "Fire Stunt Performer", "High Fall Specialist", "Stunt Safety Supervisor"],
+  "Construction": ["Construction Coordinator", "Lead Carpenter", "Set Painter", "Carpenter", "Plasterer", "Stagehand", "Construction Buyer", "Mill Foreman", "Greensperson", "Laborer"],
+  "Transportation": ["Transportation Coordinator", "Picture Car Coordinator", "Driver", "Transportation Captain", "Van Driver", "Tow Truck Driver", "Honeywagon Driver", "Cast Driver", "Equipment Driver", "Driver PA"],
+  "Post-Production": ["Post-Production Supervisor", "Colorist", "Assistant Editor", "Title Designer", "Post-Production Coordinator", "Dailies Operator", "Online Editor", "Conform Artist", "Digital Intermediate Producer", "Post-Production Assistant"],
+  "Production": ["Production Coordinator", "Key Production Assistant", "Production Secretary", "Assistant Production Coordinator", "Key Set PA", "Set PA", "Office PA", "Production Assistant", "Production Intern", "Clearance Coordinator"],
+  "Music": ["Music Editor", "Scoring Mixer", "Orchestrator", "Music Supervisor", "Music Coordinator", "Music Producer", "Composer Assistant", "Score Recordist", "Music Programmer", "Music Clearance Coordinator"]
+};
+
+const numberedCrewByDept = {
+  "Grip & Electric": ["Grip #1", "Grip #2", "Grip #3", "Best Boy Electric", "Rigging Grip", "Lighting Technician", "Dolly Grip"],
+  "Camera": ["Camera Operator", "First Assistant Camera", "Second Assistant Camera", "Steadicam Operator", "Digital Imaging Technician"],
+  "Art": ["Set Dresser", "Prop Master", "Scenic Artist"],
+  "Sound": ["Boom Operator", "Sound Mixer", "Foley Artist", "Sound Editor"],
+  "Makeup": ["Makeup Artist", "Hairstylist"],
+  "Wardrobe": ["Wardrobe Supervisor", "Costume Assistant"],
+  "Visual Effects": ["VFX Artist"],
+  "Stunts": ["Stunt Double", "Stunt Performer", "Choreographer"],
+  "Construction": ["Armorer"],
+  "Transportation": ["Driver"],
+  "Post-Production": ["Colorist", "Assistant Editor"],
+  "Production": ["Production Assistant", "Craft Service", "Script Supervisor"],
+  "Music": []
+};
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function wikiLink(name) {
+  return '<a href="https://en.wikipedia.org/wiki/List_of_people_killed_for_being_transgender" target="_blank" rel="noopener">' + escapeHtml(name) + '</a>';
+}
+
+const cities = [
+  { name: "San Francisco", url: "https://en.wikipedia.org/wiki/Compton%27s_Cafeteria_riot" },
+  { name: "New York City", url: "https://en.wikipedia.org/wiki/Stonewall_riots" },
+  { name: "Los Angeles", url: "https://en.wikipedia.org/wiki/Cooper%27s_Donuts_riot" },
+  { name: "Seattle", url: "https://en.wikipedia.org/wiki/LGBTQ_culture_in_Seattle" },
+  { name: "Minneapolis", url: "https://en.wikipedia.org/wiki/LGBTQ_rights_in_Minnesota" },
+  { name: "Berlin", url: "https://en.wikipedia.org/wiki/Institut_f%C3%BCr_Sexualwissenschaft" },
+  { name: "Copenhagen", url: "https://en.wikipedia.org/wiki/Christine_Jorgensen" },
+  { name: "London", url: "https://en.wikipedia.org/wiki/Transgender_rights_in_the_United_Kingdom" },
+  { name: "Bangkok", url: "https://en.wikipedia.org/wiki/Transgender_rights_in_Thailand" },
+  { name: "Buenos Aires", url: "https://en.wikipedia.org/wiki/Gender_Identity_Law_(Argentina)" },
+  { name: "Mexico City", url: "https://en.wikipedia.org/wiki/LGBTQ_rights_in_Mexico" },
+  { name: "Amsterdam", url: "https://en.wikipedia.org/wiki/LGBTQ_rights_in_the_Netherlands" },
+  { name: "Toronto", url: "https://en.wikipedia.org/wiki/LGBTQ_culture_in_Toronto" },
+  { name: "Sydney", url: "https://en.wikipedia.org/wiki/Sydney_Mardi_Gras" },
+  { name: "Stockholm", url: "https://en.wikipedia.org/wiki/Transgender_rights_in_Sweden" },
+  { name: "Paris", url: "https://en.wikipedia.org/wiki/LGBTQ_rights_in_France" },
+  { name: "Chicago", url: "https://en.wikipedia.org/wiki/LGBTQ_culture_in_Chicago" },
+  { name: "São Paulo", url: "https://en.wikipedia.org/wiki/S%C3%A3o_Paulo_Pride" },
+  { name: "Madrid", url: "https://en.wikipedia.org/wiki/Madrid_Pride" },
+  { name: "Cape Town", url: "https://en.wikipedia.org/wiki/LGBTQ_rights_in_South_Africa" },
+  { name: "Taipei", url: "https://en.wikipedia.org/wiki/Taiwan_Pride" }
+];
+
+const movies = [
+  { title: "Boys Don't Cry", url: "https://en.wikipedia.org/wiki/Boys_Don%27t_Cry_(film)" },
+  { title: "The Danish Girl", url: "https://en.wikipedia.org/wiki/The_Danish_Girl_(film)" },
+  { title: "Tangerine", url: "https://en.wikipedia.org/wiki/Tangerine_(film)" },
+  { title: "A Fantastic Woman", url: "https://en.wikipedia.org/wiki/A_Fantastic_Woman" },
+  { title: "Common Gender", url: "https://en.wikipedia.org/wiki/Common_Gender" },
+  { title: "Crossing", url: "https://en.wikipedia.org/wiki/Crossing_(2024_film)" },
+  { title: "By Hook or by Crook", url: "https://en.wikipedia.org/wiki/By_Hook_or_by_Crook_(2001_film)" },
+  { title: "The Einstein of Sex", url: "https://en.wikipedia.org/wiki/The_Einstein_of_Sex" },
+  { title: "Facing Mirrors", url: "https://en.wikipedia.org/wiki/Facing_Mirrors" },
+  { title: "I Shot Andy Warhol", url: "https://en.wikipedia.org/wiki/I_Shot_Andy_Warhol" },
+  { title: "I Want What I Want", url: "https://en.wikipedia.org/wiki/I_Want_What_I_Want_(film)" },
+  { title: "Last Exit to Brooklyn", url: "https://en.wikipedia.org/wiki/Last_Exit_to_Brooklyn_(film)" },
+  { title: "Let the Right One In", url: "https://en.wikipedia.org/wiki/Let_the_Right_One_In_(film)" },
+  { title: "Lola", url: "https://en.wikipedia.org/wiki/Lola_(2019_film)" },
+  { title: "Man on High Heels", url: "https://en.wikipedia.org/wiki/Man_on_High_Heels" },
+  { title: "The Man Who Surprised Everyone", url: "https://en.wikipedia.org/wiki/The_Man_Who_Surprised_Everyone" },
+  { title: "The Matrix", url: "https://en.wikipedia.org/wiki/The_Matrix" },
+  { title: "Never My Soul", url: "https://en.wikipedia.org/wiki/Never_My_Soul!" },
+  { title: "Other Angels", url: "https://en.wikipedia.org/wiki/Other_Angels" },
+  { title: "Patong Girl", url: "https://en.wikipedia.org/wiki/Patong_Girl" },
+  { title: "Rainbow Eyes", url: "https://en.wikipedia.org/wiki/Rainbow_Eyes" },
+  { title: "Santa Sangre", url: "https://en.wikipedia.org/wiki/Santa_Sangre" },
+  { title: "Sleepaway Camp", url: "https://en.wikipedia.org/wiki/Sleepaway_Camp" },
+  { title: "Splice", url: "https://en.wikipedia.org/wiki/Splice_(film)" },
+  { title: "Starrbooty", url: "https://en.wikipedia.org/wiki/Starrbooty" },
+  { title: "Stonewall", url: "https://en.wikipedia.org/wiki/Stonewall_(1995_film)" },
+  { title: "Titane", url: "https://en.wikipedia.org/wiki/Titane" },
+  { title: "Victor/Victoria", url: "https://en.wikipedia.org/wiki/Victor/Victoria" },
+  { title: "Viva", url: "https://en.wikipedia.org/wiki/Viva_(2015_film)" },
+  { title: "The Color of Fame", url: "https://en.wikipedia.org/wiki/The_Color_of_Fame" },
+  { title: "Fanfic", url: "https://en.wikipedia.org/wiki/Fanfic_(film)" },
+  { title: "Head On", url: "https://en.wikipedia.org/wiki/Head_On_(1998_film)" },
+  { title: "Jubilee", url: "https://en.wikipedia.org/wiki/Jubilee_(1978_film)" },
+  { title: "Technoboys", url: "https://en.wikipedia.org/wiki/Technoboys" },
+  { title: "Apricot Groves", url: "https://en.wikipedia.org/wiki/Apricot_Groves" },
+  { title: "Don't Call Me Son", url: "https://en.wikipedia.org/wiki/Don%27t_Call_Me_Son" },
+  { title: "Hedwig and the Angry Inch", url: "https://en.wikipedia.org/wiki/Hedwig_and_the_Angry_Inch_(film)" },
+  { title: "Laurence Anyways", url: "https://en.wikipedia.org/wiki/Laurence_Anyways" },
+  { title: "Tomboy", url: "https://en.wikipedia.org/wiki/Tomboy_(2011_film)" },
+  { title: "XXY", url: "https://en.wikipedia.org/wiki/XXY_(film)" },
+  { title: "Transamerica", url: "https://en.wikipedia.org/wiki/Transamerica_(film)" },
+  { title: "Something Must Break", url: "https://en.wikipedia.org/wiki/Something_Must_Break" },
+  { title: "20,000 Species of Bees", url: "https://en.wikipedia.org/wiki/20,000_Species_of_Bees" },
+  { title: "Girl", url: "https://en.wikipedia.org/wiki/Girl_(2018_film)" },
+  { title: "Dallas Buyers Club", url: "https://en.wikipedia.org/wiki/Dallas_Buyers_Club" },
+  { title: "The Crying Game", url: "https://en.wikipedia.org/wiki/The_Crying_Game" },
+  { title: "I Saw the TV Glow", url: "https://en.wikipedia.org/wiki/I_Saw_the_TV_Glow" },
+  { title: "We're All Going to the World's Fair", url: "https://en.wikipedia.org/wiki/We%27re_All_Going_to_the_World%27s_Fair" },
+  { title: "Monkey Man", url: "https://en.wikipedia.org/wiki/Monkey_Man_(film)" }
+];
+
+document.addEventListener('DOMContentLoaded', function () {
+  var shuffled = shuffle([...names]);
+
+  function randomLayout() {
+    var layouts = ['layout-classic', 'layout-justified', 'layout-single'];
+    return layouts[Math.floor(Math.random() * layouts.length)];
+  }
+
+  var annotationTypes = {
+    animalSafety: [
+      'No animals were harmed in the making of this motion picture.',
+      'No animals were harmed during the filming of this motion picture. The American Humane Association monitored the animal action.',
+      'The producers certify that no animals were injured or harmed in the production of this film.',
+      'No animals were harmed in the making of this motion picture. The American Humane Association monitored the animal action, and no animals were injured.',
+      'The American Humane Association reviewed the production of this motion picture and determined that no animals were harmed during the filming.',
+      'No animals were injured or harmed during the production of this film. The filmmakers worked closely with animal welfare professionals to ensure the safety of all animals involved.'
+    ],
+    disclaimer: [
+      'Any resemblance to actual persons, living or dead, or actual events is purely coincidental.',
+      'All characters and events depicted in this film are entirely fictitious. Any similarity to actual persons, living or dead, is purely coincidental and unintentional.',
+      'This is a work of fiction. Names, characters, businesses, places, events, and incidents are either the products of the author\'s imagination or used in a fictitious manner.',
+      'All of the events depicted in this motion picture are entirely fictitious. Any resemblance to actual persons, living or dead, or to actual events or organizations is purely coincidental.',
+      'This is entirely a work of fiction. All characters, organizations, businesses, and events portrayed in this film are either the products of the author\'s imagination or are used fictitiously.',
+      'The characters and events depicted in this film are fictitious. No identification with actual persons, places, buildings, or products is intended or should be inferred.'
+    ],
+    copyright: [
+      'This motion picture is protected under the copyright laws of the United States and other countries.',
+      'Unauthorized duplication, distribution, or exhibition of this motion picture may result in civil liability and criminal prosecution.',
+      'All rights of the producer and of the owner of the recorded work are reserved. Unauthorized copying, reproduction, hiring, lending, and public performance are prohibited.',
+      'This motion picture is protected by copyright throughout the world. Any unauthorized duplication, distribution, or exhibition may result in civil liability and criminal prosecution.',
+      'All rights of the producer, the owner of the recorded work, and of the authors of the underlying works are reserved. This motion picture may not be reproduced without authorization.',
+      'This motion picture is distributed under license. Any unauthorized copying, reproduction, performance, or distribution is strictly prohibited by law and subject to penalties.'
+    ],
+    basedOnTrueEvents: [
+      'Inspired by actual events.',
+      'Based on a true story.',
+      'This film is based on actual events.',
+      'Inspired by actual events. Certain elements, characters, names, and incidents have been fictionalized for dramatic purposes.',
+      'This motion picture is based on a true story. Some characters, incidents, locations, and dialogue have been fictionalized for dramatic effect.',
+      'The following film is inspired by actual events. While based on real people and events, creative liberties have been taken for the purposes of storytelling.'
+    ],
+    noEndorsement: [
+      'No endorsement or sponsorship of the persons or organizations depicted is intended or implied.',
+      'The views and opinions expressed in this film are solely those of the filmmakers and do not necessarily reflect the views of any organizations or individuals depicted.',
+      'No endorsement by any depicted persons or organizations is intended or implied, and any such endorsement is purely coincidental.',
+      'No official endorsement or sponsorship of the individuals, organizations, or events depicted in this motion picture is intended, expressed, or implied.',
+      'The filmmakers wish to state that the views expressed by characters in this film do not necessarily reflect the views of the filmmakers, producers, or distributors.',
+      'The persons and organizations depicted in this motion picture are fictional or used fictitiously. No endorsement or sponsorship is intended or implied.'
+    ],
+    producersAcknowledge: [
+      'The producers gratefully acknowledge the cooperation and support of the many individuals and organizations who contributed to the making of this film.',
+      'Special thanks to all who made this film possible. Your contributions, both seen and unseen, are deeply appreciated.',
+      'The producers wish to thank the many individuals who generously contributed their time, talent, and resources.',
+      'The filmmakers gratefully acknowledge the generous support and cooperation received from the community.',
+      'The producers extend their deepest gratitude to the many individuals and organizations whose generous support and cooperation made this production possible.',
+      'The filmmakers wish to express their sincere appreciation to all who contributed their time, talent, and resources to the completion of this motion picture.',
+      'This film would not have been possible without the dedication and hard work of countless individuals. The producers gratefully acknowledge each and every contribution.'
+    ],
+    fictionalEvents: [
+      'The events depicted in this film are fictional. Any portrayal of specific events or persons is not intended to reflect actual history.',
+      'This film is a work of fiction. All characters, events, and dialogue are imaginary and are not intended to refer to actual events or persons.',
+      'The characters and events portrayed in this film are fictitious. Any resemblance to actual events or persons, living or dead, is entirely coincidental.',
+      'Any reference to actual historical events, real people, or real organizations is used fictitiously and is not intended to suggest any connection or endorsement.',
+      'The events, characters, and firms depicted in this motion picture are fictitious. Any similarity to actual persons, living or dead, or to actual events is coincidental.',
+      'This is a dramatized work. While inspired by real-world themes, all events, characters, and dialogue are fictional or used in a fictional context.'
+    ],
+    allRightsReserved: [
+      'All rights reserved.',
+      'All rights reserved under international copyright conventions. No part of this work may be reproduced without permission.',
+      'All rights of the producer and the copyright owner are reserved. This motion picture may not be reproduced in whole or in part.',
+      'All rights reserved. This motion picture may not be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the copyright owner.',
+      'All rights of the copyright owner and of the owner of the recorded work are reserved. Unauthorized copying, lending, or public performance of this motion picture is prohibited.',
+      'This motion picture is protected by copyright law. Any unauthorized use, reproduction, or distribution constitutes copyright infringement and may result in civil liability.'
+    ],
+    filmedOnLocation: function () {
+      return 'Filmed on location in ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+    },
+    thanksCity: function () {
+      return 'The producers wish to thank the city of ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+    },
+    madePossibleBy: function () {
+      return 'Made possible by the generous support of the people of ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+    },
+    dedication: function () {
+      var templates = [
+        'This film is dedicated to %s.',
+        'In loving memory of %s.',
+        'For %s.',
+        'Dedicated to %s.',
+        'In memory of %s.',
+        'Remembering %s.',
+        'This film is for %s.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)].replace('%s', dedicationName);
+    },
+    quotes: function () {
+      var picks = [
+        { text: 'Hope will never be silent.', author: 'Harvey Milk' },
+        { text: 'We are everywhere.', author: '' },
+        { text: 'We\'re here, we\'re queer, get used to it!', author: '' },
+        { text: 'Silence = Death.', author: '' },
+        { text: 'Love is love is love is love.', author: 'Lin-Manuel Miranda' },
+        { text: 'Gender is between your ears, not between your legs.', author: '' },
+        { text: 'The opposite of transphobia is trans love.', author: '' },
+        { text: 'Trans rights are human rights.', author: '' },
+        { text: 'Stonewall was a riot.', author: '' },
+        { text: 'Protect trans kids.', author: '' },
+        { text: 'Say their names.', author: '' },
+        { text: 'The future is trans.', author: '' },
+        { text: 'Trans liberation now.', author: '' },
+        { text: 'We deserve to exist.', author: '' },
+        { text: 'We will not be erased.', author: '' },
+        { text: 'You must always be yourself, no matter how scared you are.', author: '' }
+      ];
+      var pick = picks[Math.floor(Math.random() * picks.length)];
+      var html = escapeHtml(pick.text);
+      if (pick.author) {
+        html += '<br><span class="annotation-attribution">\u2014 ' + escapeHtml(pick.author) + '</span>';
+      }
+      return html;
+    }
+  };
+
+  var annCount = 3 + Math.floor(Math.random() * 5);
+  var activeAnnotationKeys = shuffle(Object.keys(annotationTypes)).slice(0, annCount);
+  var dedicationName = null;
+  if (activeAnnotationKeys.indexOf('dedication') !== -1) {
+    var reserveIdx = Math.floor(Math.random() * shuffled.length);
+    dedicationName = shuffled.splice(reserveIdx, 1)[0];
+  }
+
+  var essentialRoles = [
+    'Produced by',
+    'Screenplay by',
+    'Director of Photography',
+    'Edited by'
+  ];
+
+  var optionalRoles = [
+    'Music by',
+    'Production Designer',
+    'Costume Designer',
+    'Casting by',
+    'Story by'
+  ];
+
+  var roleVariants = {
+    'Produced by': ['Produced by', 'Producer'],
+    'Story by': ['Story by'],
+    'Screenplay by': ['Screenplay by', 'Written by', 'Writer'],
+    'Director of Photography': ['Director of Photography', 'Cinematography by', 'Cinematographer'],
+    'Production Designer': ['Production Designer', 'Production Design by'],
+    'Edited by': ['Edited by', 'Editor', 'Film Editor'],
+    'Music by': ['Music by', 'Original Music by', 'Original Score by', 'Composer'],
+    'Costume Designer': ['Costume Designer', 'Costume Design by'],
+    'Casting by': ['Casting by', 'Casting Director'],
+    'Directed by': ['Directed by', 'Director']
+  };
+
+  var activeOptional = optionalRoles.filter(function () { return Math.random() < 0.7; });
+  var mainCrewRoles = [...essentialRoles, ...activeOptional, 'Directed by'];
+
+  var hasStoryCredit = activeOptional.indexOf('Story by') !== -1;
+  var hasStoryBy = hasStoryCredit && Math.random() < 0.5;
+
+  var rolePeople = {
+    'Produced by': 1 + Math.floor(Math.random() * 3),
+    'Music by': 1 + Math.floor(Math.random() * 2),
+    'Casting by': 1 + Math.floor(Math.random() * 2)
+  };
+
+  var numEPs = Math.random() < 0.7 ? 1 + Math.floor(Math.random() * 3) : 0;
+  var mainCrewCount = numEPs + (hasStoryBy ? 1 : 0);
+  mainCrewRoles.forEach(function (role) {
+    mainCrewCount += rolePeople[role] || 1;
+  });
+
+  var mainCrew = shuffled.slice(0, mainCrewCount);
+  var remaining = shuffled.slice(mainCrewCount);
+
+  var castRatio = 0.05 + Math.random() * 0.15;
+  var splitIndex = Math.floor(remaining.length * castRatio);
+  var cast = remaining.slice(0, splitIndex);
+  var crewPool = remaining.slice(splitIndex);
+
+  var hasCityUnits = Math.random() < 0.4;
+  var cityCrew, deptCrew;
+  if (hasCityUnits) {
+    var deptRatio = 0.3 + Math.random() * 0.3;
+    var citySplit = Math.floor(crewPool.length * (1 - deptRatio));
+    cityCrew = crewPool.slice(0, citySplit);
+    deptCrew = crewPool.slice(citySplit);
+  } else {
+    cityCrew = [];
+    deptCrew = crewPool;
+  }
+
+  var useTransChars = Math.random() < 0.7;
+  var activeChars = useTransChars ? transCharacters : characters;
+  var shuffledChars = shuffle([...activeChars]);
+
+  var castHtml = '<h2>Cast</h2>';
+  cast.forEach(function (name, i) {
+    var ch = shuffledChars[i % shuffledChars.length];
+    castHtml += '<div class="credit"><span class="role">' + escapeHtml(ch) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
+  });
+
+  var featuredRoles = {};
+  var eligibleFeatured = ['Music by', 'Production Designer', 'Costume Designer', 'Director of Photography', 'Edited by', 'Casting by'];
+  featuredRoles['Directed by'] = true;
+  eligibleFeatured.forEach(function (role) {
+    if (mainCrewRoles.indexOf(role) !== -1 && Math.random() < 0.4) {
+      featuredRoles[role] = true;
+    }
+  });
+
+  var mainCrewHtml = '';
+  var mainIdx = 0;
+  var producerName = '';
+  var directorName = '';
+
+  var roleLabels = {};
+  mainCrewRoles.forEach(function (role) {
+    roleLabels[role] = shuffle(roleVariants[role])[0];
+  });
+
+  mainCrewRoles.forEach(function (role) {
+    var num = rolePeople[role] || 1;
+    if (featuredRoles[role]) {
+      var names = [];
+      for (var n = 0; n < num; n++) {
+        if (role === 'Produced by' && n === 0) {
+          producerName = mainCrew[mainIdx];
+        }
+        if (role === 'Directed by' && n === 0) {
+          directorName = mainCrew[mainIdx];
+        }
+        names.push(mainCrew[mainIdx]);
+        mainIdx++;
+      }
+      mainCrewHtml += '<div class="featured-card"><div class="role">' + escapeHtml(roleLabels[role]) + '</div>';
+      names.forEach(function (name) {
+        mainCrewHtml += '<div class="name">' + wikiLink(name) + '</div>';
+      });
+      mainCrewHtml += '</div>';
+    } else {
+      for (var n = 0; n < num; n++) {
+        if (role === 'Produced by' && n === 0) {
+          producerName = mainCrew[mainIdx];
+        }
+        if (role === 'Directed by' && n === 0) {
+          directorName = mainCrew[mainIdx];
+        }
+        mainCrewHtml += '<div class="credit"><span class="role">' + escapeHtml(roleLabels[role]) + '</span><span class="name">' + wikiLink(mainCrew[mainIdx]) + '</span></div>';
+        mainIdx++;
+      }
+    }
+  });
+
+  if (hasStoryBy) {
+    var storyByVariants = ['Based on a story by', 'Based on an original story by', 'From an original story by', 'Based on a story from'];
+    var storyByLabel = storyByVariants[Math.floor(Math.random() * storyByVariants.length)];
+    mainCrewHtml += '<div class="credit"><span class="role">' + storyByLabel + '</span><span class="name">' + wikiLink(mainCrew[mainIdx]) + '</span></div>';
+    mainIdx++;
+  }
+
+  for (var e = 0; e < numEPs; e++) {
+    mainCrewHtml += '<div class="credit"><span class="role">Executive Producer</span><span class="name">' + wikiLink(mainCrew[mainIdx]) + '</span></div>';
+    mainIdx++;
+  }
+
+  var deptSectionsHtml = '';
+  var deptNames = shuffle(Object.keys(filmDepartments));
+  var numDepts = 3 + Math.floor(Math.random() * 4);
+  deptNames.slice(0, numDepts).forEach(function (dept, d) {
+    var deptRoles = shuffle([...filmDepartments[dept]]);
+    var deptNumbered = [...(numberedCrewByDept[dept] || [])];
+    var roles = [...deptRoles, ...deptNumbered];
+    var start = Math.floor((deptCrew.length * d) / numDepts);
+    var end = Math.floor((deptCrew.length * (d + 1)) / numDepts);
+    var people = deptCrew.slice(start, end);
+    if (people.length === 0) return;
+    deptSectionsHtml += '<h3>' + dept + ' Department</h3>';
+    people.forEach(function (name, i) {
+      var job = roles[i % roles.length];
+      deptSectionsHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
+    });
+  });
+
+  if (hasCityUnits) {
+    var cityHtml = '';
+    var numUnits = 2 + Math.floor(Math.random() * 2);
+    var units = [];
+    for (var u = 0; u < numUnits; u++) {
+      var start = Math.floor((cityCrew.length * u) / numUnits);
+      var end = Math.floor((cityCrew.length * (u + 1)) / numUnits);
+      units.push(cityCrew.slice(start, end));
+    }
+
+    var usedCities = [];
+
+    units.forEach(function (unit) {
+      if (unit.length === 0) return;
+
+      var available = cities.filter(function (c) { return usedCities.indexOf(c.name) === -1; });
+      var city = shuffle(available)[0];
+      usedCities.push(city.name);
+
+      var orderedJobs = [...crewJobs, ...numberedCrew];
+      cityHtml += '<h3><a href="' + city.url + '" target="_blank" rel="noopener">' + escapeHtml(city.name) + ' Unit</a></h3>';
+      unit.forEach(function (name, i) {
+        var job = orderedJobs[i % orderedJobs.length];
+        cityHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
+      });
+    });
+  } else {
+    var cityHtml = '';
+  }
+
+  var songs = [
+    // --- Trans artists ---
+    // Against Me!
+    { title: 'True Trans Soul Rebel', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Transgender Dysphoria Blues', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Black Me Out', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'The Ocean', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Thrash Unreal', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Unconditional Love', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Searching for a Former Clarity', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'Baby, I\'m an Anarchist!', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    { title: 'White Crosses', performer: 'Against Me!', writer: 'Laura Jane Grace' },
+    // ANOHNI
+    { title: 'Drone Bomb Me', performer: 'ANOHNI', writer: 'ANOHNI' },
+    { title: '4 Degrees', performer: 'ANOHNI', writer: 'ANOHNI' },
+    { title: 'Hope There\'s Someone', performer: 'ANOHNI', writer: 'ANOHNI' },
+    { title: 'You Are My Sister', performer: 'ANOHNI', writer: 'ANOHNI' },
+    { title: 'Another World', performer: 'ANOHNI', writer: 'ANOHNI' },
+    { title: 'Cripple and the Starfish', performer: 'ANOHNI', writer: 'ANOHNI' },
+    // SOPHIE
+    { title: 'It\'s Okay to Cry', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Immaterial', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Faceshopping', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Ponyboy', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Bipp', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Hard', performer: 'SOPHIE', writer: 'SOPHIE' },
+    { title: 'Lemonade', performer: 'SOPHIE', writer: 'SOPHIE' },
+    // Shea Diamond
+    { title: 'I Am Her', performer: 'Shea Diamond', writer: 'Shea Diamond' },
+    { title: 'Don\'t Shoot', performer: 'Shea Diamond', writer: 'Shea Diamond' },
+    { title: 'Keisha Complex', performer: 'Shea Diamond', writer: 'Shea Diamond' },
+    // Kim Petras
+    { title: 'Heart to Break', performer: 'Kim Petras', writer: 'Kim Petras, Aaron Joseph, Lukasz Gottwald' },
+    { title: 'I Don\'t Want It at All', performer: 'Kim Petras', writer: 'Kim Petras, Lukasz Gottwald, Theron Thomas' },
+    { title: 'Unlock It', performer: 'Kim Petras', writer: 'Kim Petras, Aaron Joseph' },
+    { title: 'Malibu', performer: 'Kim Petras', writer: 'Kim Petras, Dr. Luke' },
+    { title: 'Broken', performer: 'Kim Petras', writer: 'Kim Petras, Aaron Joseph' },
+    { title: 'Do Me', performer: 'Kim Petras', writer: 'Kim Petras, Aaron Joseph' },
+    // Jackie Shane
+    { title: 'Any Other Way', performer: 'Jackie Shane', writer: 'William Bell' },
+    { title: 'Comin\' Down', performer: 'Jackie Shane', writer: 'Jackie Shane' },
+    // Lou Reed / Velvet Underground
+    { title: 'Walk on the Wild Side', performer: 'Lou Reed', writer: 'Lou Reed' },
+    { title: 'Sister Ray', performer: 'The Velvet Underground', writer: 'Lou Reed' },
+    { title: 'Candy Says', performer: 'The Velvet Underground', writer: 'Lou Reed' },
+    // The Kinks
+    { title: 'Lola', performer: 'The Kinks', writer: 'Ray Davies' },
+
+    // --- LGBT+ artists ---
+    // Tracy Chapman
+    { title: 'Fast Car', performer: 'Tracy Chapman', writer: 'Tracy Chapman' },
+    { title: 'Talkin\' \'bout a Revolution', performer: 'Tracy Chapman', writer: 'Tracy Chapman' },
+    { title: 'Give Me One Reason', performer: 'Tracy Chapman', writer: 'Tracy Chapman' },
+    { title: 'Baby Can I Hold You', performer: 'Tracy Chapman', writer: 'Tracy Chapman' },
+    // Melissa Etheridge
+    { title: 'Come to My Window', performer: 'Melissa Etheridge', writer: 'Melissa Etheridge' },
+    { title: 'I\'m the Only One', performer: 'Melissa Etheridge', writer: 'Melissa Etheridge' },
+    { title: 'Bring Me Some Water', performer: 'Melissa Etheridge', writer: 'Melissa Etheridge' },
+    // k.d. lang
+    { title: 'Constant Craving', performer: 'k.d. lang', writer: 'k.d. lang, Ben Mink' },
+    { title: 'Hallelujah', performer: 'k.d. lang', writer: 'Leonard Cohen' },
+    { title: 'Miss Chatelaine', performer: 'k.d. lang', writer: 'k.d. lang, Ben Mink' },
+    // Queen / Freddie Mercury
+    { title: 'Bohemian Rhapsody', performer: 'Queen', writer: 'Freddie Mercury' },
+    { title: 'Somebody to Love', performer: 'Queen', writer: 'Freddie Mercury' },
+    { title: 'Don\'t Stop Me Now', performer: 'Queen', writer: 'Freddie Mercury' },
+    { title: 'I Want to Break Free', performer: 'Queen', writer: 'John Deacon' },
+    // George Michael
+    { title: 'Freedom! \'90', performer: 'George Michael', writer: 'George Michael' },
+    { title: 'Careless Whisper', performer: 'George Michael', writer: 'George Michael, Andrew Ridgeley' },
+    { title: 'Faith', performer: 'George Michael', writer: 'George Michael' },
+    { title: 'Father Figure', performer: 'George Michael', writer: 'George Michael' },
+    // Elton John
+    { title: 'Your Song', performer: 'Elton John', writer: 'Elton John, Bernie Taupin' },
+    { title: 'Rocket Man', performer: 'Elton John', writer: 'Elton John, Bernie Taupin' },
+    { title: 'Tiny Dancer', performer: 'Elton John', writer: 'Elton John, Bernie Taupin' },
+    { title: 'Someone Saved My Life Tonight', performer: 'Elton John', writer: 'Elton John, Bernie Taupin' },
+    { title: 'I\'m Still Standing', performer: 'Elton John', writer: 'Elton John, Bernie Taupin' },
+    // Frank Ocean
+    { title: 'Thinkin Bout You', performer: 'Frank Ocean', writer: 'Frank Ocean' },
+    { title: 'Pink + White', performer: 'Frank Ocean', writer: 'Frank Ocean' },
+    { title: 'Self Control', performer: 'Frank Ocean', writer: 'Frank Ocean, Austin Post' },
+    { title: 'Chanel', performer: 'Frank Ocean', writer: 'Frank Ocean' },
+    // Troye Sivan
+    { title: 'Youth', performer: 'Troye Sivan', writer: 'Troye Sivan, Alex Hope' },
+    { title: 'Bloom', performer: 'Troye Sivan', writer: 'Troye Sivan, Oscar Holter' },
+    { title: 'My My My!', performer: 'Troye Sivan', writer: 'Troye Sivan, Oscar Holter' },
+    { title: 'Heaven', performer: 'Troye Sivan', writer: 'Troye Sivan, Alex Hope' },
+    // Sam Smith
+    { title: 'Stay With Me', performer: 'Sam Smith', writer: 'Sam Smith, Jimmy Napes' },
+    { title: 'Too Good at Goodbyes', performer: 'Sam Smith', writer: 'Sam Smith, Jimmy Napes' },
+    { title: 'Lay Me Down', performer: 'Sam Smith', writer: 'Sam Smith, Jimmy Napes' },
+    // Lil Nas X
+    { title: 'Montero (Call Me By Your Name)', performer: 'Lil Nas X', writer: 'Lil Nas X' },
+    { title: 'Industry Baby', performer: 'Lil Nas X', writer: 'Lil Nas X' },
+    { title: 'That\'s What I Want', performer: 'Lil Nas X', writer: 'Lil Nas X' },
+    // Dusty Springfield
+    { title: 'Son of a Preacher Man', performer: 'Dusty Springfield', writer: 'John Hurley, Ronnie Wilkins' },
+    { title: 'You Don\'t Have to Say You Love Me', performer: 'Dusty Springfield', writer: 'Pino Donaggio, Vito Pallavicini' },
+    { title: 'I Only Want to Be with You', performer: 'Dusty Springfield', writer: 'Mike Hawker, Ivor Raymonde' },
+    // Boy George / Culture Club
+    { title: 'Karma Chameleon', performer: 'Culture Club', writer: 'Boy George, Roy Hay, Mikey Craig, Jon Moss' },
+    { title: 'Do You Really Want to Hurt Me', performer: 'Culture Club', writer: 'Boy George, Roy Hay, Mikey Craig, Jon Moss' },
+    // Sylvester
+    { title: 'You Make Me Feel (Mighty Real)', performer: 'Sylvester', writer: 'Sylvester, James Wirrick' },
+    { title: 'Do Ya Wanna Funk', performer: 'Sylvester', writer: 'Sylvester, Patrick Cowley' },
+    // Vaginal Davis
+    { title: 'White Trash Lesbian Bitch on Wheels', performer: 'Vaginal Davis', writer: 'Vaginal Davis' },
+
+    // --- Queer anthems ---
+    // Lady Gaga
+    { title: 'Born This Way', performer: 'Lady Gaga', writer: 'Lady Gaga, Jeppe Laursen' },
+    { title: 'Bad Romance', performer: 'Lady Gaga', writer: 'Lady Gaga, RedOne' },
+    { title: 'Rain on Me', performer: 'Lady Gaga, Ariana Grande', writer: 'Lady Gaga, Ariana Grande' },
+    // Scissor Sisters
+    { title: 'I Don\'t Feel Like Dancin\'', performer: 'Scissor Sisters', writer: 'Scissor Sisters, Elton John' },
+    { title: 'Filthy/Gorgeous', performer: 'Scissor Sisters', writer: 'Scissor Sisters' },
+    { title: 'Take Your Mama', performer: 'Scissor Sisters', writer: 'Scissor Sisters' },
+    // Robyn
+    { title: 'Dancing On My Own', performer: 'Robyn', writer: 'Robyn, Patrik Berger' },
+    { title: 'Call Your Girlfriend', performer: 'Robyn', writer: 'Robyn, Klas Åhlund' },
+    // Janelle Monáe
+    { title: 'Make Me Feel', performer: 'Janelle Monáe', writer: 'Janelle Monáe, Prince' },
+    { title: 'Pynk', performer: 'Janelle Monáe', writer: 'Janelle Monáe' },
+    { title: 'Tightrope', performer: 'Janelle Monáe', writer: 'Janelle Monáe, Nathaniel Irvin III' },
+    // Hayley Kiyoko
+    { title: 'Girls Like Girls', performer: 'Hayley Kiyoko', writer: 'Hayley Kiyoko' },
+    { title: 'Curious', performer: 'Hayley Kiyoko', writer: 'Hayley Kiyoko' },
+    // Orville Peck
+    { title: 'Dead of Night', performer: 'Orville Peck', writer: 'Orville Peck' },
+    { title: 'Queen of the Rodeo', performer: 'Orville Peck', writer: 'Orville Peck' },
+    // Gloria Gaynor
+    { title: 'I Will Survive', performer: 'Gloria Gaynor', writer: 'Dino Fekaris, Freddie Perren' },
+    // Diana Ross
+    { title: 'I\'m Coming Out', performer: 'Diana Ross', writer: 'Bernard Edwards, Nile Rodgers' },
+    // Cher
+    { title: 'Believe', performer: 'Cher', writer: 'Brian Higgins, Matthew Gray' },
+    { title: 'Strong Enough', performer: 'Cher', writer: 'Mark Taylor, Paul Barry' },
+    // Madonna
+    { title: 'Vogue', performer: 'Madonna', writer: 'Madonna, Shep Pettibone' },
+    { title: 'Express Yourself', performer: 'Madonna', writer: 'Madonna, Stephen Bray' },
+    // Gloria Trevi
+    { title: 'Todos Me Miran', performer: 'Gloria Trevi', writer: 'Gloria Trevi' },
+    // Dolly Parton
+    { title: 'Travelin\' Thru', performer: 'Dolly Parton', writer: 'Dolly Parton' },
+    // Judas Priest / Rob Halford
+    { title: 'Breaking the Law', performer: 'Judas Priest', writer: 'Glenn Tipton, Rob Halford, K.K. Downing' },
+    { title: 'You\'ve Got Another Thing Comin\'', performer: 'Judas Priest', writer: 'Glenn Tipton, Rob Halford, K.K. Downing' },
+    // Bronski Beat
+    { title: 'Smalltown Boy', performer: 'Bronski Beat', writer: 'Jimmy Somerville, Larry Steinbachek, Steve Bronski' },
+    { title: 'Why?', performer: 'Bronski Beat', writer: 'Jimmy Somerville, Larry Steinbachek, Steve Bronski' },
+    // Pet Shop Boys
+    { title: 'It\'s a Sin', performer: 'Pet Shop Boys', writer: 'Neil Tennant, Chris Lowe' },
+    { title: 'West End Girls', performer: 'Pet Shop Boys', writer: 'Neil Tennant, Chris Lowe' },
+    // Village People
+    { title: 'Y.M.C.A.', performer: 'Village People', writer: 'Jacques Morali, Victor Willis' },
+    { title: 'Macho Man', performer: 'Village People', writer: 'Jacques Morali, Victor Willis' }
+  ];
+
+  var musicHtml = '';
+  if (Math.random() < 0.75) {
+    var shuffledSongs = shuffle([...songs]);
+    var numSongs = 3 + Math.floor(Math.random() * 6);
+    var musicLayout = Math.random() < 0.5 ? 'two-column' : '';
+    shuffledSongs.slice(0, numSongs).forEach(function (s) {
+      musicHtml += '<div class="music-entry">';
+      musicHtml += '<div class="song-title">"' + escapeHtml(s.title) + '"</div>';
+      musicHtml += '<div class="song-detail">Performed by ' + escapeHtml(s.performer) + '</div>';
+      musicHtml += '<div class="song-detail">Written by ' + escapeHtml(s.writer) + '</div>';
+      musicHtml += '</div>';
+    });
+    if (musicHtml) {
+      musicHtml = '<h2>Music</h2><div class="music-section' + (musicLayout ? ' ' + musicLayout : '') + '">' + musicHtml + '</div>';
+    }
+  }
+
+  var annotationsHtml = '';
+  activeAnnotationKeys.forEach(function (key) {
+    var val = annotationTypes[key];
+    if (key === 'quotes') {
+      annotationsHtml += '<div class="annotation">' + val() + '</div>';
+    } else {
+      var text = typeof val === 'function' ? val() : val[Math.floor(Math.random() * val.length)];
+      annotationsHtml += '<div class="annotation">' + escapeHtml(text) + '</div>';
+    }
+  });
+  if (annotationsHtml) {
+    annotationsHtml = '<div class="annotations">' + annotationsHtml + '</div>';
+  }
+
+  var movie = shuffle([...movies])[0];
+
+  var openingHtml = '';
+  if (Math.random() < 0.5) {
+    var taglines = ['', 'A Film By %s', '%s Presents'];
+    var taglineTemplate = shuffle(taglines)[0];
+    openingHtml = '<div class="opening-title">';
+    if (taglineTemplate) {
+      var creditName = taglineTemplate.indexOf('Presents') !== -1
+        ? (producerName || mainCrew[0])
+        : (directorName || mainCrew[0]);
+      openingHtml += '<div class="tagline">' + escapeHtml(taglineTemplate.replace('%s', creditName)) + '</div>';
+    }
+    openingHtml += '<div class="film-title">' + escapeHtml(movie.title) + '</div></div>';
+  }
+
+  var mainWrap = '<div class="' + randomLayout() + '">';
+  var castWrap = '<div class="' + randomLayout() + '">';
+  var deptWrap = '<div class="' + randomLayout() + '">';
+
+  if (Math.random() < 0.5) {
+    var html = openingHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + musicHtml + annotationsHtml;
+  } else {
+    var html = openingHtml + mainWrap + mainCrewHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + castWrap + castHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + musicHtml + annotationsHtml;
+  }
+
+  document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
+
+  var container = document.getElementById('credits-content');
+  container.innerHTML = html;
+
+  if (Math.random() < 0.5) {
+    document.body.classList.add('bold-name');
+  }
+
+  var titleEl = document.querySelector('.movie-title');
+
+  var fonts = [
+    '"Times New Roman", Georgia, serif',
+    'Georgia, "Times New Roman", serif',
+    'Garamond, "Times New Roman", serif',
+    '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+    'Impact, Arial Black, sans-serif',
+    'Arial, Helvetica, sans-serif',
+    '"Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif',
+    '"Century Gothic", "Apple Gothic", sans-serif',
+    'Optima, "Segoe UI", Candara, sans-serif',
+    '"Bodoni MT", "Bodoni 72", Didot, serif',
+    '"Baskerville Old Face", "Baskerville", "Times New Roman", serif',
+    'Cambria, Georgia, serif',
+    '"Goudy Old Style", Garamond, serif',
+    'Perpetua, "Times New Roman", serif',
+    'Rockwell, "Courier Bold", serif',
+    'Futura, "Century Gothic", "Apple Gothic", sans-serif',
+    '"Gill Sans", "Gill Sans MT", Calibri, sans-serif',
+    '"Lucida Grande", "Lucida Sans Unicode", sans-serif',
+    'Tahoma, Geneva, sans-serif',
+    'Verdana, Geneva, sans-serif',
+    '"Copperplate Gothic Light", "Copperplate", sans-serif',
+    '"Book Antiqua", Palatino, serif'
+  ];
+  var weights = ['normal', 'bold', '900'];
+  var styles = ['normal', 'italic'];
+  var spacing = ['normal', '0.05em', '0.1em', '0.15em'];
+  var transforms = ['none', 'uppercase'];
+
+  titleEl.style.fontFamily = shuffle(fonts)[0];
+  document.body.style.fontFamily = shuffle(fonts)[0];
+  titleEl.style.fontWeight = shuffle(weights)[0];
+  titleEl.style.fontStyle = shuffle(styles)[0];
+  titleEl.style.letterSpacing = shuffle(spacing)[0];
+  titleEl.style.textTransform = shuffle(transforms)[0];
+  titleEl.style.whiteSpace = 'nowrap';
+
+  var colorModes = ['white', 'blue', 'pink', 'gradient', 'rainbow', 'purple', 'gold', 'orange', 'bi'];
+  var mode = shuffle(colorModes)[0];
+  var flagBlue = '#55CDFC';
+  var flagPink = '#F5A9B8';
+  var flagPurple = '#732982';
+  var flagGold = '#FFD700';
+  var flagOrange = '#FF8C00';
+  var flagRed = '#E40303';
+  var flagGreen = '#008026';
+  var flagDarkBlue = '#004CFF';
+
+  if (mode === 'gradient') {
+    titleEl.style.background = 'linear-gradient(to right, ' + flagBlue + ', ' + flagPink + ')';
+    titleEl.style.webkitBackgroundClip = 'text';
+    titleEl.style.backgroundClip = 'text';
+    titleEl.style.color = 'transparent';
+  } else if (mode === 'blue') {
+    titleEl.style.color = flagBlue;
+  } else if (mode === 'pink') {
+    titleEl.style.color = flagPink;
+  } else if (mode === 'rainbow') {
+    titleEl.style.background = 'linear-gradient(to right, ' + flagRed + ', ' + flagOrange + ', #FFED00, ' + flagGreen + ', ' + flagDarkBlue + ', ' + flagPurple + ')';
+    titleEl.style.webkitBackgroundClip = 'text';
+    titleEl.style.backgroundClip = 'text';
+    titleEl.style.color = 'transparent';
+  } else if (mode === 'purple') {
+    titleEl.style.color = flagPurple;
+  } else if (mode === 'gold') {
+    titleEl.style.color = flagGold;
+  } else if (mode === 'orange') {
+    titleEl.style.color = flagOrange;
+  } else if (mode === 'bi') {
+    titleEl.style.background = 'linear-gradient(to right, #D60270, #9B59B6, #0038A8)';
+    titleEl.style.webkitBackgroundClip = 'text';
+    titleEl.style.backgroundClip = 'text';
+    titleEl.style.color = 'transparent';
+  }
+
+  var glowColors = [flagBlue, flagPink, '#fff', flagPurple, flagGold, flagOrange, flagRed, flagGreen, flagDarkBlue];
+  var glowColor = shuffle(glowColors)[0];
+  var glowLevels = ['none', 'subtle', 'strong'];
+  var glow = shuffle(glowLevels)[0];
+
+  if (glow === 'subtle') {
+    titleEl.style.textShadow = '0 0 6px ' + glowColor;
+  } else if (glow === 'strong') {
+    titleEl.style.textShadow = '0 0 16px ' + glowColor + ', 0 0 32px ' + glowColor;
+  }
+
+  // Size title so its width is 30%-50% of viewport width
+  var viewportW = window.innerWidth;
+  var usableW = viewportW * 0.92;
+  var targetPercent = 30 + Math.floor(Math.random() * 21);
+  var targetW = usableW * targetPercent / 100;
+
+  titleEl.style.fontSize = '100px';
+  titleEl.offsetHeight;
+  var ratio = targetW / titleEl.scrollWidth;
+  titleEl.style.fontSize = (100 * ratio) + 'px';
+
+  var delay = 1 + Math.floor(Math.random() * 1001) / 1000;
+  requestAnimationFrame(function () {
+    var height = container.offsetHeight;
+    var duration = Math.max(30, (window.innerHeight + height) / 50);
+    container.style.animation = 'scroll ' + duration + 's linear ' + delay + 's both';
+  });
+
+  container.addEventListener('animationend', function () {
+    document.getElementById('title-overlay').classList.add('visible');
+    var delay = 15000 + Math.floor(Math.random() * 45001);
+
+    if (Math.random() < 0.08) {
+      setTimeout(function () {
+        var flagEl = document.getElementById('flag');
+        var flags = [
+          // trans
+          'linear-gradient(to bottom, #55CDFC 0 20%, #F5A9B8 20% 40%, #fff 40% 60%, #F5A9B8 60% 80%, #55CDFC 80% 100%)',
+          // rainbow
+          'linear-gradient(to bottom, #E40303 0 16.67%, #FF8C00 16.67% 33.33%, #FFED00 33.33% 50%, #008026 50% 66.67%, #004CFF 66.67% 83.33%, #732982 83.33% 100%)',
+          // bi
+          'linear-gradient(to bottom, #D60270 0 40%, #9B59B6 40% 60%, #0038A8 60% 100%)',
+          // lesbian
+          'linear-gradient(to bottom, #D52D00 0 14.2857%, #EF7627 14.2857% 28.5714%, #FF9A56 28.5714% 42.8571%, #FFFFFF 42.8571% 57.1429%, #D162A4 57.1429% 71.4286%, #B55690 71.4286% 85.7143%, #A30262 85.7143% 100%)',
+          // asexual
+          'linear-gradient(to bottom, #000000 0 25%, #A4A4A4 25% 50%, #FFFFFF 50% 75%, #810081 75% 100%)',
+          // pansexual
+          'linear-gradient(to bottom, #FF218C 0 33.33%, #FFD800 33.33% 66.67%, #21B1FF 66.67% 100%)',
+          // non-binary
+          'linear-gradient(to bottom, #FFF430 0 25%, #FFFFFF 25% 50%, #9C59D1 50% 75%, #000000 75% 100%)',
+          // genderqueer
+          'linear-gradient(to bottom, #B57EDC 0 33.33%, #FFFFFF 33.33% 66.67%, #4A8123 66.67% 100%)',
+          // genderfluid
+          'linear-gradient(to bottom, #FF76A4 0 20%, #FFFFFF 20% 40%, #C011D7 40% 60%, #000000 60% 80%, #2F3CBE 80% 100%)',
+          // agender
+          'linear-gradient(to bottom, #000000 0 14.2857%, #A4A4A4 14.2857% 28.5714%, #FFFFFF 28.5714% 42.8571%, #B8F483 42.8571% 57.1429%, #FFFFFF 57.1429% 71.4286%, #A4A4A4 71.4286% 85.7143%, #000000 85.7143% 100%)'
+        ];
+        flagEl.style.background = flags[Math.floor(Math.random() * flags.length)];
+        flagEl.classList.add('visible');
+      }, Math.max(0, delay - 3000));
+    }
+
+    setTimeout(function () {
+      location.reload();
+    }, delay);
+  });
+});
+</script>
+</body>
+</html>
