@@ -820,6 +820,113 @@ const movies = [
   { title: "Monkey Man", url: "https://en.wikipedia.org/wiki/Monkey_Man_(film)" }
 ];
 
+const productionCompanies = [
+  "Stonewall Studios",
+  "Marsha P. Johnson Productions",
+  "Sylvia Rivera Films",
+  "Compton's Table",
+  "Cooper's Donuts",
+  "Hirschfeld House",
+  "Christine Jorgensen Pictures",
+  "Brandon Teena Cinema",
+  "Lavender Features",
+  "Pink Triangle Pictures",
+  "Lambda Light Media",
+  "Outright Productions",
+  "Rainbow Productions",
+  "Two-Spirit Films",
+  "Fa'afafine Features",
+  "Muxe Media",
+  "Hijra House Media",
+  "Bakla Pictures",
+  "Kiki Films",
+  "Ballroom Cinema",
+  "Voguing Films",
+  "Drag House Entertainment",
+  "Sappho Films",
+  "Third Gender Cinema",
+  "Nonbinary Entertainment",
+  "Gender Outlaw Media",
+  "Casa Susanna Pictures",
+  "ACT UP Cinema",
+  "Glitter Bomb Productions",
+  "Feather Boa Films"
+];
+
+const specialThanks = [
+  "Transgender Law Center",
+  "National Center for Transgender Equality",
+  "Trans Lifeline",
+  "The Trevor Project",
+  "GLAAD",
+  "Lambda Legal",
+  "Sylvia Rivera Law Project",
+  "Astraea Lesbian Foundation for Justice",
+  "Black Transmen Inc.",
+  "Trans Women of Color Collective",
+  "The Okra Project",
+  "Point of Pride",
+  "Trans Justice Funding Project",
+  "Gender Spectrum",
+  "Rainbow Railroad",
+  "OutRight Action International",
+  "GLBT Historical Society",
+  "ONE National Gay & Lesbian Archives",
+  "The Center for LGBTQ Studies (CLAGS)",
+  "Schwules Museum Berlin",
+  "Transgender Europe (TGEU)",
+  "ILGA World",
+  "Mermaids UK",
+  "ALL OUT",
+  "Casa Frida Mexico",
+  "Transgender Equality Network Ireland",
+  "Gender DynamiX South Africa",
+  "Sampoorna India",
+  "Fondation Émergence Canada",
+  "Transgender Victoria Australia",
+  "Rainbow Youth New Zealand",
+  "UK Black Pride",
+  "TransYouth Equality Foundation",
+  "Camp Trans",
+  "Rainbow Union Poland"
+];
+
+const filmedAt = [
+  "Stonewall Inn, New York City",
+  "Compton's Cafeteria, San Francisco",
+  "Cooper's Donuts, Los Angeles",
+  "Julius' Bar, New York City",
+  "The Black Cat, San Francisco",
+  "The Stud, San Francisco",
+  "The Abbey, West Hollywood",
+  "Club Q, Colorado Springs",
+  "Pulse, Orlando",
+  "The UpStairs Lounge, New Orleans",
+  "The Castro Theatre, San Francisco",
+  "Schwules Museum, Berlin",
+  "Homomonument, Amsterdam",
+  "Christopher Park, New York City",
+  "The Women's Building, San Francisco",
+  "Le Marais, Paris",
+  "Schöneberg, Berlin",
+  "Sitges, Spain",
+  "Fire Island, New York",
+  "Provincetown, Massachusetts",
+  "Oxford Street, Sydney",
+  "Boystown, Chicago",
+  "The Center, New York City",
+  "LA LGBT Center, Los Angeles",
+  "Ipanema Beach, Rio de Janeiro",
+  "Vauxhall, London",
+  "Soho, London",
+  "Canal Street, Manchester",
+  "Church-Wellesley Village, Toronto",
+  "Davie Village, Vancouver",
+  "Zona Rosa, Mexico City",
+  "Bar 17, Buenos Aires",
+  "Puerto Vallarta, Mexico"
+];
+
 document.addEventListener('DOMContentLoaded', function () {
   var shuffled = shuffle([...names]);
 
@@ -1441,6 +1548,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  var filmedAtHtml = '';
+  if (Math.random() < 0.5) {
+    var numLocations = 1 + Math.floor(Math.random() * 3);
+    var shuffledLocations = shuffle([...filmedAt]).slice(0, numLocations);
+    shuffledLocations.forEach(function (loc) {
+      filmedAtHtml += '<div class="annotation">Filmed on location at ' + escapeHtml(loc) + '.</div>';
+    });
+    if (filmedAtHtml) {
+      filmedAtHtml = '<div class="annotations">' + filmedAtHtml + '</div>';
+    }
+  }
+
+  var specialThanksHtml = '';
+  if (Math.random() < 0.75) {
+    var numThanks = 3 + Math.floor(Math.random() * 4);
+    var shuffledThanks = shuffle([...specialThanks]).slice(0, numThanks);
+    shuffledThanks.forEach(function (org) {
+      specialThanksHtml += '<div class="credit"><span class="role">' + escapeHtml(org) + '</span></div>';
+    });
+    if (specialThanksHtml) {
+      specialThanksHtml = '<h2>Special Thanks</h2><div class="' + randomLayout() + '">' + specialThanksHtml + '</div>';
+    }
+  }
+
   var annotationCity = cities[Math.floor(Math.random() * cities.length)].name;
   var annotationMovie = movies[Math.floor(Math.random() * movies.length)].title;
 
@@ -1474,14 +1605,23 @@ document.addEventListener('DOMContentLoaded', function () {
     openingHtml += '<div class="film-title">' + escapeHtml(movie.title) + '</div></div>';
   }
 
+  var prodCoHtml = '';
+  if (Math.random() < 0.7) {
+    var numCos = 1 + Math.floor(Math.random() * 2);
+    var shuffledCos = shuffle([...productionCompanies]).slice(0, numCos);
+    shuffledCos.forEach(function (co) {
+      prodCoHtml += '<div class="featured-card"><div class="role">A ' + escapeHtml(co) + ' Production</div></div>';
+    });
+  }
+
   var mainWrap = '<div class="' + randomLayout() + '">';
   var castWrap = '<div class="' + randomLayout() + '">';
   var deptWrap = '<div class="' + randomLayout() + '">';
 
   if (Math.random() < 0.5) {
-    var html = openingHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + musicHtml + annotationsHtml;
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
   } else {
-    var html = openingHtml + mainWrap + mainCrewHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + castWrap + castHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + musicHtml + annotationsHtml;
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + castWrap + castHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
   }
 
   document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
