@@ -253,6 +253,26 @@ h3 a {
   max-width: 65%;
 }
 
+.section-decoration {
+  text-align: center;
+  margin: 40px 0;
+  line-height: 1;
+}
+.section-decoration.rule {
+  border-top: 1px solid rgba(255,255,255,0.4);
+  margin: 50px 0;
+}
+.section-decoration.asterisks {
+  letter-spacing: 0.4em;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9em;
+}
+.section-decoration.dots {
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85em;
+}
+
 .annotations {
   text-align: center;
   margin: 60px auto 40px auto;
@@ -1240,6 +1260,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var sectionZigzag = Math.random() < 0.25;
   var deptCitySide = 0;
 
+  var useDecoration = Math.random() < 0.35;
+  var decorationHtml = '';
+  if (useDecoration) {
+    var decoTypes = ['rule', 'asterisks', 'dots'];
+    var decoType = decoTypes[Math.floor(Math.random() * 3)];
+    var decoContent = { rule: '', asterisks: '* * *', dots: '\u00B7 \u00B7 \u00B7' };
+    decorationHtml = '<div class="section-decoration ' + decoType + '">' + decoContent[decoType] + '</div>';
+  }
+
   var castLayout = Math.random() < 0.25 ? 'layout-dot' : ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)];
   var castHtml = '<h2>Cast</h2>';
   cast.forEach(function (name, i) {
@@ -1708,13 +1737,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var mainWrap = '<div class="' + ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)] + '">';
   var castWrap = '<div class="' + castLayout + '">';
-  var deptWrap = '<div class="' + randomLayout() + '">';
-
+  var sectionParts = [];
+  sectionParts.push(openingHtml + prodCoHtml);
+  sectionParts.push(mainWrap + mainCrewHtml + '</div>');
   if (castFirst) {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+    sectionParts.push(castWrap + castHtml + '</div>');
+    sectionParts.push(deptSectionsHtml);
   } else {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+    sectionParts.push(deptSectionsHtml);
+    sectionParts.push(castWrap + castHtml + '</div>');
   }
+  sectionParts.push(cityHtml);
+  sectionParts.push(filmedAtHtml);
+  sectionParts.push(musicHtml);
+  sectionParts.push(specialThanksHtml);
+  sectionParts.push(annotationsHtml);
+
+  var html = sectionParts.filter(function(s) { return s; }).join(decorationHtml);
 
   document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
 
