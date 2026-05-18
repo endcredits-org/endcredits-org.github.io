@@ -1010,6 +1010,23 @@ const filmedAt = [
   "Puerto Vallarta, Mexico"
 ];
 
+const productionBabies = [
+  "Jessica", "Emily", "Charlotte", "Alice", "Willow", "Luna", "Lucy",
+  "Freya", "Ellie", "Sarah", "Riley", "Olivia", "Lily", "Jennifer",
+  "Sophia", "Emma", "Amelia", "Ava", "Mia", "Isabella", "Evelyn",
+  "Chloe", "Ella", "Grace", "Zoe", "Hannah", "Scarlett", "Victoria",
+  "Violet", "Aurora", "Hazel", "Penelope", "Layla", "Stella", "Nora",
+  "Noah", "Charlie", "Elliot", "Daniel", "Tyler", "Jay", "Luke",
+  "Lucas", "Logan", "Kai", "Jayden", "James", "Jack", "Oliver",
+  "Liam", "Ethan", "Jacob", "Michael", "Alexander", "Benjamin",
+  "Mason", "Elijah", "William", "Henry", "Sebastian", "Leo",
+  "Samuel", "Owen", "Gabriel", "Isaac", "Levi", "Dylan", "Nathan",
+  "Rowan", "Jordan", "Quinn", "Avery", "Parker", "Sage",
+  "Blake", "Morgan", "Reese", "Taylor", "River", "Phoenix",
+  "Wren", "Cameron", "Drew", "Finley", "Dakota", "Ari",
+  "Jamie", "Casey", "Skylar"
+];
+
 document.addEventListener('DOMContentLoaded', function () {
   var shuffled = shuffle([...names]);
 
@@ -1670,6 +1687,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  var productionBabiesHtml = '';
+  if (Math.random() < 0.30) {
+    var numBabies = 4 + Math.floor(Math.random() * 7);
+    var selectedBabies = shuffle([...productionBabies]).slice(0, numBabies);
+    selectedBabies.forEach(function (name) {
+      productionBabiesHtml += '<div class="credit"><span class="name">' + escapeHtml(name) + '</span></div>';
+    });
+    if (productionBabiesHtml) {
+      productionBabiesHtml = '<h2>Production Babies</h2><div class="layout-wall">' + productionBabiesHtml + '</div>';
+    }
+  }
+
   var annotationCity = cities[Math.floor(Math.random() * cities.length)].name;
   var annotationMovie = movies[Math.floor(Math.random() * movies.length)].title;
 
@@ -1715,9 +1744,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var mainWrap = '<div class="' + ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)] + '">';
   var castWrap = '<div class="' + castLayout + '">';
   if (castFirst) {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
   } else {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
   }
 
   document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
