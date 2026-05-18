@@ -697,18 +697,18 @@ const cityUnitJobs = [
 ];
 
 const filmDepartments = {
-  "Grip & Electric": ["Key Grip", "Best Boy Electric", "Rigging Grip", "Lighting Technician", "Dolly Grip", "Generator Operator", "Balloon Light Technician", "Rigging Best Boy", "Lamp Operator", "Set Lighting Technician"],
-  "Camera": ["Camera Operator", "First Assistant Camera", "Second Assistant Camera", "Steadicam Operator", "Digital Imaging Technician", "Camera Trainee", "Film Loader", "Motion Control Operator", "Underwater Camera Operator", "Aerial Camera Operator"],
-  "Art": ["Art Director", "Set Decorator", "Prop Master", "Set Dresser", "Scenic Artist", "Graphic Artist", "Set Designer", "Storyboard Artist", "Leadman", "Assistant Art Director"],
-  "Sound": ["Production Sound Mixer", "Boom Operator", "Utility Sound Technician", "ADR Mixer", "Foley Artist", "Dialogue Editor", "Re-recording Mixer", "Sound Effects Editor", "Foley Walker", "ADR Recordist"],
-  "Makeup": ["Makeup Department Head", "Key Makeup Artist", "Makeup Artist", "Prosthetics Designer", "Prosthetics Technician", "Hair Department Head", "Key Hairstylist", "Hairstylist", "Wig Maker", "Special Effects Makeup Artist"],
-  "Wardrobe": ["Wardrobe Supervisor", "Key Costumer", "Costume Supervisor", "Seamstress", "Tailor", "Stitcher", "Set Costumer", "Costume Illustrator", "Wardrobe Assistant", "Costume Shopper"],
-  "Visual Effects": ["VFX Supervisor", "Compositing Supervisor", "3D Artist", "Rotoscope Artist", "VFX Editor", "Matchmove Artist", "Texture Artist", "Lighting Artist", "FX Artist", "Matte Painter"],
-  "Stunts": ["Stunt Coordinator", "Stunt Performer", "Fight Choreographer", "Stunt Double", "Utility Stunt Performer", "Precision Driver", "Stunt Rigger", "Fire Stunt Performer", "High Fall Specialist", "Stunt Safety Supervisor"],
-  "Construction": ["Construction Coordinator", "Lead Carpenter", "Set Painter", "Carpenter", "Plasterer", "Stagehand", "Construction Buyer", "Mill Foreman", "Greensperson", "Laborer"],
-  "Transportation": ["Transportation Coordinator", "Picture Car Coordinator", "Driver", "Transportation Captain", "Van Driver", "Tow Truck Driver", "Honeywagon Driver", "Cast Driver", "Equipment Driver", "Driver PA"],
-  "Post-Production": ["Post-Production Supervisor", "Colorist", "Assistant Editor", "Title Designer", "Post-Production Coordinator", "Dailies Operator", "Online Editor", "Conform Artist", "Digital Intermediate Producer", "Post-Production Assistant"],
-  "Production": ["Production Coordinator", "Key Production Assistant", "Production Secretary", "Assistant Production Coordinator", "Key Set PA", "Set PA", "Office PA", "Production Assistant", "Production Intern", "Clearance Coordinator"],
+  "Grip & Electric": ["Key Grip", "Best Boy Electric", "Rigging Grip", "Lighting Technician", "Dolly Grip", "Generator Operator", "Balloon Light Technician", "Rigging Best Boy", "Lamp Operator", "Set Lighting Technician", "Lighting Console Programmer", "Rigging Electrician", "Head Rigger", "Condor Operator", "Dimmer Board Operator"],
+  "Camera": ["Camera Operator", "First Assistant Camera", "Second Assistant Camera", "Steadicam Operator", "Digital Imaging Technician", "Camera Trainee", "Film Loader", "Motion Control Operator", "Underwater Camera Operator", "Aerial Camera Operator", "B-Camera Operator", "Camera Intern", "Phantom Technician", "Video Assist Operator", "Camera PA"],
+  "Art": ["Art Director", "Set Decorator", "Prop Master", "Set Dresser", "Scenic Artist", "Graphic Artist", "Set Designer", "Storyboard Artist", "Leadman", "Assistant Art Director", "Conceptual Artist", "Art Department Coordinator", "Art Department PA", "Set Buyer"],
+  "Sound": ["Production Sound Mixer", "Boom Operator", "Utility Sound Technician", "ADR Mixer", "Foley Artist", "Dialogue Editor", "Re-recording Mixer", "Sound Effects Editor", "Foley Walker", "ADR Recordist", "Playback Operator", "Wireless Technician", "Sound Utility", "Cable Puller"],
+  "Makeup": ["Makeup Department Head", "Key Makeup Artist", "Makeup Artist", "Prosthetics Designer", "Prosthetics Technician", "Hair Department Head", "Key Hairstylist", "Hairstylist", "Wig Maker", "Special Effects Makeup Artist", "Crowd Makeup Artist", "Body Makeup Artist", "Nail Technician"],
+  "Wardrobe": ["Wardrobe Supervisor", "Key Costumer", "Costume Supervisor", "Seamstress", "Tailor", "Stitcher", "Set Costumer", "Costume Illustrator", "Wardrobe Assistant", "Costume Shopper", "Costume Cutter", "Aging/Dyer Artist", "Costume Set Supervisor"],
+  "Visual Effects": ["VFX Supervisor", "Compositing Supervisor", "3D Artist", "Rotoscope Artist", "VFX Editor", "Matchmove Artist", "Texture Artist", "Lighting Artist", "FX Artist", "Matte Painter", "Compositor", "Tracking Artist"],
+  "Stunts": ["Stunt Coordinator", "Stunt Performer", "Fight Choreographer", "Stunt Double", "Utility Stunt Performer", "Precision Driver", "Stunt Rigger", "Fire Stunt Performer", "High Fall Specialist", "Stunt Safety Supervisor", "Water Safety", "Stunt Medic"],
+  "Construction": ["Construction Coordinator", "Lead Carpenter", "Set Painter", "Carpenter", "Plasterer", "Stagehand", "Construction Buyer", "Mill Foreman", "Greensperson", "Laborer", "Shop Carpenter", "Scenic Charge"],
+  "Transportation": ["Transportation Coordinator", "Picture Car Coordinator", "Driver", "Transportation Captain", "Van Driver", "Tow Truck Driver", "Honeywagon Driver", "Cast Driver", "Equipment Driver", "Driver PA", "Water Truck Driver", "Driver Captain"],
+  "Post-Production": ["Post-Production Supervisor", "Colorist", "Assistant Editor", "Title Designer", "Post-Production Coordinator", "Dailies Operator", "Online Editor", "Conform Artist", "Digital Intermediate Producer", "Post-Production Assistant", "First Assistant Editor", "Color Assist"],
+  "Production": ["Production Coordinator", "Key Production Assistant", "Production Secretary", "Assistant Production Coordinator", "Key Set PA", "Set PA", "Office PA", "Production Assistant", "Production Intern", "Clearance Coordinator", "Travel Coordinator", "Permits Coordinator", "Second Second Assistant Director", "Set Medic", "Safety Supervisor"],
   "Music": ["Music Editor", "Scoring Mixer", "Orchestrator", "Music Supervisor", "Music Coordinator", "Music Producer", "Composer Assistant", "Score Recordist", "Music Programmer", "Music Clearance Coordinator"]
 };
 
@@ -1203,8 +1203,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     deptSectionsHtml += '<h3>' + s.dept + ' Department</h3>';
+    var shuffledRoles = [...roles];
     people.forEach(function (name, i) {
-      var job = roles[i % roles.length];
+      var idx = i % roles.length;
+      if (idx === 0 && i > 0) {
+        shuffledRoles = shuffle([...roles]);
+      }
+      var job = shuffledRoles[idx];
       deptSectionsHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
     });
   });
@@ -1246,8 +1251,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
       cityHtml += '<h3><a href="' + city.url + '" target="_blank" rel="noopener">' + escapeHtml(city.name) + ' Unit</a></h3>';
+      var shuffledJobs = [...orderedJobs];
       unit.forEach(function (name, i) {
-        var job = orderedJobs[i % orderedJobs.length];
+        var idx = i % orderedJobs.length;
+        if (idx === 0 && i > 0) {
+          shuffledJobs = shuffle([...orderedJobs]);
+        }
+        var job = shuffledJobs[idx];
         cityHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
       });
     });
