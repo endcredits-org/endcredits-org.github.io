@@ -1659,7 +1659,7 @@ document.addEventListener('DOMContentLoaded', function () {
       specialThanksHtml += '<div class="credit"><span class="role">' + escapeHtml(org) + '</span></div>';
     });
     if (specialThanksHtml) {
-      var thanksLayout = Math.random() < 0.4 ? 'layout-wall' : randomLayout();
+      var thanksLayout = 'layout-wall';
       specialThanksHtml = '<h2>Special Thanks</h2><div class="' + thanksLayout + '">' + specialThanksHtml + '</div>';
     }
   }
