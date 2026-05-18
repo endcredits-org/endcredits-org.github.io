@@ -1039,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var hasCityUnits = Math.random() < 0.4;
   var cityCrew, deptCrew;
   if (hasCityUnits) {
-    var deptRatio = 0.3 + Math.random() * 0.3;
+    var deptRatio = 0.4 + Math.random() * 0.3;
     var citySplit = Math.floor(crewPool.length * (1 - deptRatio));
     cityCrew = crewPool.slice(0, citySplit);
     deptCrew = crewPool.slice(citySplit);
@@ -1123,17 +1123,86 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var deptSectionsHtml = '';
-  var deptNames = shuffle(Object.keys(filmDepartments));
+  var tiers = [
+    ["Production"],
+    ["Camera", "Sound", "Grip & Electric"],
+    ["Art", "Wardrobe", "Makeup"],
+    ["Stunts", "Construction", "Visual Effects", "Transportation"],
+    ["Post-Production", "Music"]
+  ];
+  var deptNames = [];
+  tiers.forEach(function (tier) {
+    var available = tier.filter(function (d) { return filmDepartments[d]; });
+    deptNames.push(shuffle(available));
+  });
+  deptNames = deptNames.flat();
   var numDepts = 3 + Math.floor(Math.random() * 4);
-  deptNames.slice(0, numDepts).forEach(function (dept, d) {
-    var deptRoles = shuffle([...filmDepartments[dept]]);
-    var deptNumbered = [...(numberedCrewByDept[dept] || [])];
+  var selected = deptNames.slice(0, numDepts);
+
+  var totalWeight = 0;
+  var weights = [];
+  selected.forEach(function (dept) {
+    var w = 1 + Math.floor(Math.random() * 10);
+    weights.push(w);
+    totalWeight += w;
+  });
+
+  var assigned = [];
+  var used = 0;
+  weights.forEach(function (w, i) {
+    var share = Math.floor(deptCrew.length * w / totalWeight);
+    if (i === weights.length - 1) {
+      share = deptCrew.length - used;
+    }
+    assigned.push({ dept: selected[i], share: share });
+    used += share;
+  });
+
+  // Filter out departments with fewer than 5 people, redistribute
+  var survivors = [];
+  var surplus = 0;
+  assigned.forEach(function (a) {
+    if (a.share < 5) {
+      surplus += a.share;
+    } else {
+      survivors.push(a);
+    }
+  });
+
+  if (survivors.length === 0) {
+    var largest = assigned.reduce(function (a, b) { return a.share > b.share ? a : b; });
+    survivors = [largest];
+    surplus = 0;
+  }
+
+  if (surplus > 0) {
+    var surplusPer = Math.floor(surplus / survivors.length);
+    survivors.forEach(function (s) { s.share += surplusPer; });
+    surplus -= surplusPer * survivors.length;
+    if (surplus > 0) survivors[0].share += surplus;
+  }
+
+  var crewIdx = 0;
+  survivors.forEach(function (s) {
+    var deptRoles = shuffle([...filmDepartments[s.dept]]);
+    var deptNumbered = [...(numberedCrewByDept[s.dept] || [])];
     var roles = [...deptRoles, ...deptNumbered];
-    var start = Math.floor((deptCrew.length * d) / numDepts);
-    var end = Math.floor((deptCrew.length * (d + 1)) / numDepts);
-    var people = deptCrew.slice(start, end);
+    var people = deptCrew.slice(crewIdx, crewIdx + s.share);
+    crewIdx += s.share;
+
     if (people.length === 0) return;
-    deptSectionsHtml += '<h3>' + dept + ' Department</h3>';
+
+    if (roles.length < people.length) {
+      var usedSet = {};
+      roles.forEach(function (j) { usedSet[j] = true; });
+      var extra = shuffle(filmDepartments[s.dept]).filter(function (j) { return !usedSet[j]; })
+                     .concat(shuffle(numberedCrewByDept[s.dept] || []).filter(function (j) { return !usedSet[j]; }));
+      for (var e = 0; e < extra.length && roles.length < people.length; e++) {
+        roles.push(extra[e]);
+      }
+    }
+
+    deptSectionsHtml += '<h3>' + s.dept + ' Department</h3>';
     people.forEach(function (name, i) {
       var job = roles[i % roles.length];
       deptSectionsHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
