@@ -206,10 +206,19 @@ h3 a {
 }
 .layout-dot .dot-leader {
   flex: 1;
-  border-bottom: 1px dotted white;
+  overflow: hidden;
   margin: 0 6px;
-  height: 0;
   align-self: baseline;
+  min-width: 20px;
+}
+.layout-dot .dot-leader::before {
+  content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .';
+  color: white;
+  font-size: 1em;
+  letter-spacing: 8px;
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: baseline;
 }
 .layout-dot .name {
   font-weight: normal;
