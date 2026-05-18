@@ -176,6 +176,74 @@ h3 a {
   text-align: center;
 }
 
+.layout-zigzag .credit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 60%;
+  margin: 0 auto 10px 0;
+}
+.layout-zigzag .credit:nth-child(even) {
+  margin: 0 0 10px auto;
+}
+.layout-zigzag .role {
+  text-align: right;
+}
+.layout-zigzag .name {
+  text-align: left;
+}
+
+.layout-dot .credit {
+  display: flex;
+  align-items: baseline;
+  max-width: 800px;
+  margin: 0 auto 10px auto;
+}
+.layout-dot .role {
+  font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.layout-dot .dot-leader {
+  flex: 1;
+  border-bottom: 1px dotted white;
+  margin: 0 6px;
+  height: 0;
+  align-self: baseline;
+}
+.layout-dot .name {
+  font-weight: normal;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.layout-wall {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.layout-wall .credit {
+  flex: 0 1 220px;
+  text-align: center;
+  margin: 0;
+}
+.layout-wall .role {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.section-left {
+  margin-right: auto;
+  max-width: 65%;
+}
+.section-right {
+  margin-left: auto;
+  max-width: 65%;
+}
+
 .annotations {
   text-align: center;
   margin: 60px auto 40px auto;
@@ -1159,10 +1227,16 @@ document.addEventListener('DOMContentLoaded', function () {
   var activeChars = useTransChars ? transCharacters : characters;
   var shuffledChars = shuffle([...activeChars]);
 
+  var castFirst = Math.random() < 0.5;
+  var sectionZigzag = Math.random() < 0.25;
+  var deptCitySide = 0;
+
+  var castLayout = Math.random() < 0.25 ? 'layout-dot' : ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)];
   var castHtml = '<h2>Cast</h2>';
   cast.forEach(function (name, i) {
     var ch = shuffledChars[i % shuffledChars.length];
-    castHtml += '<div class="credit"><span class="role">' + escapeHtml(ch) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
+    var dotLeader = castLayout === 'layout-dot' ? '<span class="dot-leader"></span>' : '';
+    castHtml += '<div class="credit"><span class="role">' + escapeHtml(ch) + '</span>' + dotLeader + '<span class="name">' + wikiLink(name) + '</span></div>';
   });
 
   var featuredRoles = {};
@@ -1290,6 +1364,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var crewIdx = 0;
+  var deptLayout = randomLayout();
   survivors.forEach(function (s) {
     var deptRoles = shuffle([...filmDepartments[s.dept]]);
     var deptNumbered = [...(numberedCrewByDept[s.dept] || [])];
@@ -1309,6 +1384,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    var deptSectionSide = sectionZigzag ? (deptCitySide++ % 2 === 0 ? ' section-left' : ' section-right') : '';
+    deptSectionsHtml += '<div class="' + deptLayout + deptSectionSide + '">';
     deptSectionsHtml += '<h3>' + s.dept + ' Department</h3>';
     var shuffledRoles = [...roles];
     people.forEach(function (name, i) {
@@ -1319,6 +1396,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var job = shuffledRoles[idx];
       deptSectionsHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
     });
+    deptSectionsHtml += '</div>';
   });
 
   if (hasCityUnits) {
@@ -1333,6 +1411,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var usedCities = [];
 
+    var cityLayout = deptLayout;
     units.forEach(function (unit) {
       if (unit.length === 0) return;
 
@@ -1357,6 +1436,8 @@ document.addEventListener('DOMContentLoaded', function () {
           orderedJobs.push(extra[e]);
         }
       }
+      var unitSide = sectionZigzag ? (deptCitySide++ % 2 === 0 ? ' section-left' : ' section-right') : '';
+      cityHtml += '<div class="' + cityLayout + unitSide + '">';
       cityHtml += '<h3><a href="' + city.url + '" target="_blank" rel="noopener">' + escapeHtml(city.name) + ' Unit</a></h3>';
       var shuffledJobs = [...orderedJobs];
       unit.forEach(function (name, i) {
@@ -1367,6 +1448,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var job = shuffledJobs[idx];
         cityHtml += '<div class="credit"><span class="role">' + escapeHtml(job) + '</span><span class="name">' + wikiLink(name) + '</span></div>';
       });
+      cityHtml += '</div>';
     });
   } else {
     var cityHtml = '';
@@ -1568,7 +1650,8 @@ document.addEventListener('DOMContentLoaded', function () {
       specialThanksHtml += '<div class="credit"><span class="role">' + escapeHtml(org) + '</span></div>';
     });
     if (specialThanksHtml) {
-      specialThanksHtml = '<h2>Special Thanks</h2><div class="' + randomLayout() + '">' + specialThanksHtml + '</div>';
+      var thanksLayout = Math.random() < 0.4 ? 'layout-wall' : randomLayout();
+      specialThanksHtml = '<h2>Special Thanks</h2><div class="' + thanksLayout + '">' + specialThanksHtml + '</div>';
     }
   }
 
@@ -1614,14 +1697,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  var mainWrap = '<div class="' + randomLayout() + '">';
-  var castWrap = '<div class="' + randomLayout() + '">';
+  var mainWrap = '<div class="' + ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)] + '">';
+  var castWrap = '<div class="' + castLayout + '">';
   var deptWrap = '<div class="' + randomLayout() + '">';
 
-  if (Math.random() < 0.5) {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+  if (castFirst) {
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
   } else {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptWrap + deptSectionsHtml + '</div>' + castWrap + castHtml + '</div>' + (cityHtml ? '<div class="' + randomLayout() + '">' + cityHtml + '</div>' : '') + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
+    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + annotationsHtml;
   }
 
   document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
