@@ -854,13 +854,44 @@ document.addEventListener('DOMContentLoaded', function () {
       'This motion picture is protected by copyright law. Any unauthorized use, reproduction, or distribution constitutes copyright infringement and may result in civil liability.'
     ],
     filmedOnLocation: function () {
-      return 'Filmed on location in ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+      var templates = [
+        'Filmed on location in ' + annotationCity + '.',
+        'Location filming took place entirely in ' + annotationCity + '.',
+        'Principal photography was conducted on location in ' + annotationCity + '.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
     },
     thanksCity: function () {
-      return 'The producers wish to thank the city of ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+      var templates = [
+        'The producers wish to thank the city of ' + annotationCity + '.',
+        'The producers extend their gratitude to the city of ' + annotationCity + ' and its residents.',
+        'Special thanks to the people of ' + annotationCity + ' for their hospitality and support.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
     },
     madePossibleBy: function () {
-      return 'Made possible by the generous support of the people of ' + cities[Math.floor(Math.random() * cities.length)].name + '.';
+      var templates = [
+        'Made possible by the generous support of the people of ' + annotationCity + '.',
+        'This film was made possible through the cooperation of the city of ' + annotationCity + '.',
+        'The filmmakers gratefully acknowledge the invaluable support received from the community of ' + annotationCity + '.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
+    },
+    filmedAt: function () {
+      var templates = [
+        'Produced on location in ' + annotationCity + ' with the cooperation of local authorities.',
+        'This motion picture was produced entirely on location in ' + annotationCity + ' and the surrounding area.',
+        'The production of this film was based in ' + annotationCity + ' and the surrounding region.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
+    },
+    movieLocation: function () {
+      var templates = [
+        escapeHtml(annotationMovie) + ' was filmed on location in ' + annotationCity + '.',
+        'The motion picture ' + escapeHtml(annotationMovie) + ' was produced on location in ' + annotationCity + '.',
+        'Based on actual events, this film was shot on location in ' + annotationCity + '.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
     },
     dedication: function () {
       var templates = [
@@ -1273,6 +1304,9 @@ document.addEventListener('DOMContentLoaded', function () {
       musicHtml = '<h2>Music</h2><div class="music-section' + (musicLayout ? ' ' + musicLayout : '') + '">' + musicHtml + '</div>';
     }
   }
+
+  var annotationCity = cities[Math.floor(Math.random() * cities.length)].name;
+  var annotationMovie = movies[Math.floor(Math.random() * movies.length)].title;
 
   var annotationsHtml = '';
   activeAnnotationKeys.forEach(function (key) {
