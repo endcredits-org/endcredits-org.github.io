@@ -661,6 +661,41 @@ const numberedCrew = [
   "Choreographer"
 ];
 
+const cityUnitJobs = [
+  "Unit Production Manager",
+  "Location Manager",
+  "Assistant Location Manager",
+  "Location Assistant",
+  "Unit Production Assistant",
+  "Production Coordinator",
+  "First Assistant Director",
+  "Second Assistant Director",
+  "Script Supervisor",
+  "Set Photographer",
+  "BTS Videographer",
+  "Gaffer",
+  "Best Boy Electric",
+  "Lighting Technician",
+  "Key Grip",
+  "Dolly Grip",
+  "Rigging Grip",
+  "Set Dresser",
+  "Prop Master",
+  "Set Decorator",
+  "Construction Coordinator",
+  "Transportation Coordinator",
+  "Craft Service",
+  "Catering",
+  "Security Coordinator",
+  "Production Accountant",
+  "Medic",
+  "Animal Wrangler",
+  "Stand-in",
+  "Local Casting Director",
+  "Extras Coordinator",
+  "Publicist"
+];
+
 const filmDepartments = {
   "Grip & Electric": ["Key Grip", "Best Boy Electric", "Rigging Grip", "Lighting Technician", "Dolly Grip", "Generator Operator", "Balloon Light Technician", "Rigging Best Boy", "Lamp Operator", "Set Lighting Technician"],
   "Camera": ["Camera Operator", "First Assistant Camera", "Second Assistant Camera", "Steadicam Operator", "Digital Imaging Technician", "Camera Trainee", "Film Loader", "Motion Control Operator", "Underwater Camera Operator", "Aerial Camera Operator"],
@@ -1124,7 +1159,23 @@ document.addEventListener('DOMContentLoaded', function () {
       var city = shuffle(available)[0];
       usedCities.push(city.name);
 
-      var orderedJobs = [...crewJobs, ...numberedCrew];
+      var numCity = 1 + Math.floor(Math.random() * Math.min(cityUnitJobs.length, 8));
+      var numNumbered = 1 + Math.floor(Math.random() * Math.min(numberedCrew.length, 6));
+      var shuffledNumbered = shuffle([...numberedCrew]);
+      var selectedNumbered = shuffledNumbered.slice(0, numNumbered);
+      var originalOrderedNumbered = numberedCrew.filter(function (job) { return selectedNumbered.indexOf(job) !== -1; });
+      var namedJobs = shuffle(cityUnitJobs).slice(0, numCity);
+      var orderedJobs = [...namedJobs, ...originalOrderedNumbered];
+
+      if (orderedJobs.length < unit.length) {
+        var used = {};
+        orderedJobs.forEach(function (j) { used[j] = true; });
+        var extra = shuffle(cityUnitJobs).filter(function (j) { return !used[j]; })
+                       .concat(shuffle(numberedCrew).filter(function (j) { return !used[j]; }));
+        for (var e = 0; e < extra.length && orderedJobs.length < unit.length; e++) {
+          orderedJobs.push(extra[e]);
+        }
+      }
       cityHtml += '<h3><a href="' + city.url + '" target="_blank" rel="noopener">' + escapeHtml(city.name) + ' Unit</a></h3>';
       unit.forEach(function (name, i) {
         var job = orderedJobs[i % orderedJobs.length];
