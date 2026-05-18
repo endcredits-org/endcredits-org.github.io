@@ -1852,10 +1852,11 @@ document.addEventListener('DOMContentLoaded', function () {
     titleEl.style.textShadow = '0 0 16px ' + glowColor + ', 0 0 32px ' + glowColor;
   }
 
-  // Size title so its width is 30%-50% of viewport width
+  // Size title based on viewport width
   var viewportW = window.innerWidth;
   var usableW = viewportW * 0.92;
-  var targetPercent = 30 + Math.floor(Math.random() * 21);
+  var smallScreen = viewportW < 600;
+  var targetPercent = smallScreen ? 60 + Math.floor(Math.random() * 21) : 30 + Math.floor(Math.random() * 21);
   var targetW = usableW * targetPercent / 100;
 
   titleEl.style.fontSize = '100px';
