@@ -859,55 +859,86 @@ const cities = [
 ];
 
 const movies = [
-  { title: "Boys Don't Cry", url: "https://en.wikipedia.org/wiki/Boys_Don%27t_Cry_(film)" },
-  { title: "The Danish Girl", url: "https://en.wikipedia.org/wiki/The_Danish_Girl_(film)" },
-  { title: "Tangerine", url: "https://en.wikipedia.org/wiki/Tangerine_(film)" },
-  { title: "A Fantastic Woman", url: "https://en.wikipedia.org/wiki/A_Fantastic_Woman" },
-  { title: "Common Gender", url: "https://en.wikipedia.org/wiki/Common_Gender" },
-  { title: "Crossing", url: "https://en.wikipedia.org/wiki/Crossing_(2024_film)" },
-  { title: "By Hook or by Crook", url: "https://en.wikipedia.org/wiki/By_Hook_or_by_Crook_(2001_film)" },
-  { title: "The Einstein of Sex", url: "https://en.wikipedia.org/wiki/The_Einstein_of_Sex" },
-  { title: "Facing Mirrors", url: "https://en.wikipedia.org/wiki/Facing_Mirrors" },
-  { title: "I Shot Andy Warhol", url: "https://en.wikipedia.org/wiki/I_Shot_Andy_Warhol" },
-  { title: "I Want What I Want", url: "https://en.wikipedia.org/wiki/I_Want_What_I_Want_(film)" },
-  { title: "Last Exit to Brooklyn", url: "https://en.wikipedia.org/wiki/Last_Exit_to_Brooklyn_(film)" },
-  { title: "Let the Right One In", url: "https://en.wikipedia.org/wiki/Let_the_Right_One_In_(film)" },
-  { title: "Lola", url: "https://en.wikipedia.org/wiki/Lola_(2019_film)" },
-  { title: "Man on High Heels", url: "https://en.wikipedia.org/wiki/Man_on_High_Heels" },
-  { title: "The Man Who Surprised Everyone", url: "https://en.wikipedia.org/wiki/The_Man_Who_Surprised_Everyone" },
-  { title: "The Matrix", url: "https://en.wikipedia.org/wiki/The_Matrix" },
-  { title: "Never My Soul", url: "https://en.wikipedia.org/wiki/Never_My_Soul!" },
-  { title: "Other Angels", url: "https://en.wikipedia.org/wiki/Other_Angels" },
-  { title: "Patong Girl", url: "https://en.wikipedia.org/wiki/Patong_Girl" },
-  { title: "Rainbow Eyes", url: "https://en.wikipedia.org/wiki/Rainbow_Eyes" },
-  { title: "Santa Sangre", url: "https://en.wikipedia.org/wiki/Santa_Sangre" },
-  { title: "Sleepaway Camp", url: "https://en.wikipedia.org/wiki/Sleepaway_Camp" },
-  { title: "Splice", url: "https://en.wikipedia.org/wiki/Splice_(film)" },
-  { title: "Starrbooty", url: "https://en.wikipedia.org/wiki/Starrbooty" },
-  { title: "Stonewall", url: "https://en.wikipedia.org/wiki/Stonewall_(1995_film)" },
-  { title: "Titane", url: "https://en.wikipedia.org/wiki/Titane" },
-  { title: "Victor/Victoria", url: "https://en.wikipedia.org/wiki/Victor/Victoria" },
-  { title: "Viva", url: "https://en.wikipedia.org/wiki/Viva_(2015_film)" },
-  { title: "The Color of Fame", url: "https://en.wikipedia.org/wiki/The_Color_of_Fame" },
-  { title: "Fanfic", url: "https://en.wikipedia.org/wiki/Fanfic_(film)" },
-  { title: "Head On", url: "https://en.wikipedia.org/wiki/Head_On_(1998_film)" },
-  { title: "Jubilee", url: "https://en.wikipedia.org/wiki/Jubilee_(1978_film)" },
-  { title: "Technoboys", url: "https://en.wikipedia.org/wiki/Technoboys" },
-  { title: "Apricot Groves", url: "https://en.wikipedia.org/wiki/Apricot_Groves" },
-  { title: "Don't Call Me Son", url: "https://en.wikipedia.org/wiki/Don%27t_Call_Me_Son" },
-  { title: "Hedwig and the Angry Inch", url: "https://en.wikipedia.org/wiki/Hedwig_and_the_Angry_Inch_(film)" },
-  { title: "Laurence Anyways", url: "https://en.wikipedia.org/wiki/Laurence_Anyways" },
-  { title: "Tomboy", url: "https://en.wikipedia.org/wiki/Tomboy_(2011_film)" },
-  { title: "XXY", url: "https://en.wikipedia.org/wiki/XXY_(film)" },
-  { title: "Transamerica", url: "https://en.wikipedia.org/wiki/Transamerica_(film)" },
-  { title: "Something Must Break", url: "https://en.wikipedia.org/wiki/Something_Must_Break" },
-  { title: "20,000 Species of Bees", url: "https://en.wikipedia.org/wiki/20,000_Species_of_Bees" },
-  { title: "Girl", url: "https://en.wikipedia.org/wiki/Girl_(2018_film)" },
-  { title: "Dallas Buyers Club", url: "https://en.wikipedia.org/wiki/Dallas_Buyers_Club" },
-  { title: "The Crying Game", url: "https://en.wikipedia.org/wiki/The_Crying_Game" },
-  { title: "I Saw the TV Glow", url: "https://en.wikipedia.org/wiki/I_Saw_the_TV_Glow" },
-  { title: "We're All Going to the World's Fair", url: "https://en.wikipedia.org/wiki/We%27re_All_Going_to_the_World%27s_Fair" },
-  { title: "Monkey Man", url: "https://en.wikipedia.org/wiki/Monkey_Man_(film)" }
+  { title: "Boys Don't Cry", year: 1999, url: "https://en.wikipedia.org/wiki/Boys_Don%27t_Cry_(film)" },
+  { title: "The Danish Girl", year: 2015, url: "https://en.wikipedia.org/wiki/The_Danish_Girl_(film)" },
+  { title: "Tangerine", year: 2015, url: "https://en.wikipedia.org/wiki/Tangerine_(film)" },
+  { title: "A Fantastic Woman", year: 2017, url: "https://en.wikipedia.org/wiki/A_Fantastic_Woman" },
+  { title: "Common Gender", year: 2019, url: "https://en.wikipedia.org/wiki/Common_Gender" },
+  { title: "Crossing", year: 2024, url: "https://en.wikipedia.org/wiki/Crossing_(2024_film)" },
+  { title: "By Hook or by Crook", year: 2001, url: "https://en.wikipedia.org/wiki/By_Hook_or_by_Crook_(2001_film)" },
+  { title: "The Einstein of Sex", year: 1999, url: "https://en.wikipedia.org/wiki/The_Einstein_of_Sex" },
+  { title: "Facing Mirrors", year: 2011, url: "https://en.wikipedia.org/wiki/Facing_Mirrors" },
+  { title: "I Shot Andy Warhol", year: 1996, url: "https://en.wikipedia.org/wiki/I_Shot_Andy_Warhol" },
+  { title: "I Want What I Want", year: 1972, url: "https://en.wikipedia.org/wiki/I_Want_What_I_Want_(film)" },
+  { title: "Last Exit to Brooklyn", year: 1989, url: "https://en.wikipedia.org/wiki/Last_Exit_to_Brooklyn_(film)" },
+  { title: "Let the Right One In", year: 2008, url: "https://en.wikipedia.org/wiki/Let_the_Right_One_In_(film)" },
+  { title: "Lola", year: 2019, url: "https://en.wikipedia.org/wiki/Lola_(2019_film)" },
+  { title: "Man on High Heels", year: 2014, url: "https://en.wikipedia.org/wiki/Man_on_High_Heels" },
+  { title: "The Man Who Surprised Everyone", year: 2018, url: "https://en.wikipedia.org/wiki/The_Man_Who_Surprised_Everyone" },
+  { title: "The Matrix", year: 1999, url: "https://en.wikipedia.org/wiki/The_Matrix" },
+  { title: "Never My Soul", year: 2015, url: "https://en.wikipedia.org/wiki/Never_My_Soul!" },
+  { title: "Other Angels", year: 2015, url: "https://en.wikipedia.org/wiki/Other_Angels" },
+  { title: "Patong Girl", year: 2014, url: "https://en.wikipedia.org/wiki/Patong_Girl" },
+  { title: "Rainbow Eyes", year: 2019, url: "https://en.wikipedia.org/wiki/Rainbow_Eyes" },
+  { title: "Santa Sangre", year: 1989, url: "https://en.wikipedia.org/wiki/Santa_Sangre" },
+  { title: "Sleepaway Camp", year: 1983, url: "https://en.wikipedia.org/wiki/Sleepaway_Camp" },
+  { title: "Splice", year: 2009, url: "https://en.wikipedia.org/wiki/Splice_(film)" },
+  { title: "Starrbooty", year: 2007, url: "https://en.wikipedia.org/wiki/Starrbooty" },
+  { title: "Stonewall", year: 1995, url: "https://en.wikipedia.org/wiki/Stonewall_(1995_film)" },
+  { title: "Titane", year: 2021, url: "https://en.wikipedia.org/wiki/Titane" },
+  { title: "Victor/Victoria", year: 1982, url: "https://en.wikipedia.org/wiki/Victor/Victoria" },
+  { title: "Viva", year: 2015, url: "https://en.wikipedia.org/wiki/Viva_(2015_film)" },
+  { title: "The Color of Fame", year: 2016, url: "https://en.wikipedia.org/wiki/The_Color_of_Fame" },
+  { title: "Fanfic", year: 2023, url: "https://en.wikipedia.org/wiki/Fanfic_(film)" },
+  { title: "Head On", year: 1998, url: "https://en.wikipedia.org/wiki/Head_On_(1998_film)" },
+  { title: "Jubilee", year: 1978, url: "https://en.wikipedia.org/wiki/Jubilee_(1978_film)" },
+  { title: "Technoboys", year: 2019, url: "https://en.wikipedia.org/wiki/Technoboys" },
+  { title: "Apricot Groves", year: 2016, url: "https://en.wikipedia.org/wiki/Apricot_Groves" },
+  { title: "Don't Call Me Son", year: 2016, url: "https://en.wikipedia.org/wiki/Don%27t_Call_Me_Son" },
+  { title: "Hedwig and the Angry Inch", year: 2001, url: "https://en.wikipedia.org/wiki/Hedwig_and_the_Angry_Inch_(film)" },
+  { title: "Laurence Anyways", year: 2012, url: "https://en.wikipedia.org/wiki/Laurence_Anyways" },
+  { title: "Tomboy", year: 2011, url: "https://en.wikipedia.org/wiki/Tomboy_(2011_film)" },
+  { title: "XXY", year: 2007, url: "https://en.wikipedia.org/wiki/XXY_(film)" },
+  { title: "Transamerica", year: 2005, url: "https://en.wikipedia.org/wiki/Transamerica_(film)" },
+  { title: "Something Must Break", year: 2014, url: "https://en.wikipedia.org/wiki/Something_Must_Break" },
+  { title: "20,000 Species of Bees", year: 2023, url: "https://en.wikipedia.org/wiki/20,000_Species_of_Bees" },
+  { title: "Girl", year: 2018, url: "https://en.wikipedia.org/wiki/Girl_(2018_film)" },
+  { title: "Dallas Buyers Club", year: 2013, url: "https://en.wikipedia.org/wiki/Dallas_Buyers_Club" },
+  { title: "The Crying Game", year: 1992, url: "https://en.wikipedia.org/wiki/The_Crying_Game" },
+  { title: "I Saw the TV Glow", year: 2024, url: "https://en.wikipedia.org/wiki/I_Saw_the_TV_Glow" },
+  { title: "We're All Going to the World's Fair", year: 2021, url: "https://en.wikipedia.org/wiki/We%27re_All_Going_to_the_World%27s_Fair" },
+  { title: "Monkey Man", year: 2024, url: "https://en.wikipedia.org/wiki/Monkey_Man_(film)" },
+  { title: "Appropriate Behavior", year: 2014, url: "https://en.wikipedia.org/wiki/Appropriate_Behavior" },
+  { title: "Bit", year: 2019, url: "https://en.wikipedia.org/wiki/Bit_(2019_film)" },
+  { title: "Blue Is the Warmest Colour", year: 2013, url: "https://en.wikipedia.org/wiki/Blue_Is_the_Warmest_Colour" },
+  { title: "Bound", year: 1996, url: "https://en.wikipedia.org/wiki/Bound_(1996_film)" },
+  { title: "Brokeback Mountain", year: 2005, url: "https://en.wikipedia.org/wiki/Brokeback_Mountain" },
+  { title: "But I'm a Cheerleader", year: 1999, url: "https://en.wikipedia.org/wiki/But_I%27m_a_Cheerleader" },
+  { title: "Call Me by Your Name", year: 2017, url: "https://en.wikipedia.org/wiki/Call_Me_by_Your_Name_(film)" },
+  { title: "Carol", year: 2015, url: "https://en.wikipedia.org/wiki/Carol_(film)" },
+  { title: "D.E.B.S.", year: 2004, url: "https://en.wikipedia.org/wiki/D.E.B.S._(2004_film)" },
+  { title: "Disclosure", year: 2020, url: "https://en.wikipedia.org/wiki/Disclosure_(2020_film)" },
+  { title: "Disobedience", year: 2017, url: "https://en.wikipedia.org/wiki/Disobedience_(2017_film)" },
+  { title: "Dog Day Afternoon", year: 1975, url: "https://en.wikipedia.org/wiki/Dog_Day_Afternoon" },
+  { title: "God's Own Country", year: 2017, url: "https://en.wikipedia.org/wiki/God%27s_Own_Country_(2017_film)" },
+  { title: "Maurice", year: 1987, url: "https://en.wikipedia.org/wiki/Maurice_(1987_film)" },
+  { title: "Milk", year: 2008, url: "https://en.wikipedia.org/wiki/Milk_(2008_film)" },
+  { title: "Moonlight", year: 2016, url: "https://en.wikipedia.org/wiki/Moonlight_(2016_film)" },
+  { title: "Mulholland Drive", year: 2001, url: "https://en.wikipedia.org/wiki/Mulholland_Drive_(film)" },
+  { title: "My Own Private Idaho", year: 1991, url: "https://en.wikipedia.org/wiki/My_Own_Private_Idaho" },
+  { title: "Orlando", year: 1992, url: "https://en.wikipedia.org/wiki/Orlando_(1992_film)" },
+  { title: "Paris Is Burning", year: 1990, url: "https://en.wikipedia.org/wiki/Paris_Is_Burning_(film)" },
+  { title: "Philadelphia", year: 1993, url: "https://en.wikipedia.org/wiki/Philadelphia_(1993_film)" },
+  { title: "Portrait of a Lady on Fire", year: 2019, url: "https://en.wikipedia.org/wiki/Portrait_of_a_Lady_on_Fire" },
+  { title: "Pride", year: 2014, url: "https://en.wikipedia.org/wiki/Pride_(2014_film)" },
+  { title: "Rafiki", year: 2018, url: "https://en.wikipedia.org/wiki/Rafiki_(film)" },
+  { title: "Saving Face", year: 2004, url: "https://en.wikipedia.org/wiki/Saving_Face_(2004_film)" },
+  { title: "The Death and Life of Marsha P. Johnson", year: 2017, url: "https://en.wikipedia.org/wiki/The_Death_and_Life_of_Marsha_P._Johnson" },
+  { title: "The Handmaiden", year: 2016, url: "https://en.wikipedia.org/wiki/The_Handmaiden_(film)" },
+  { title: "The Kids Are All Right", year: 2010, url: "https://en.wikipedia.org/wiki/The_Kids_Are_All_Right_(film)" },
+  { title: "The Rocky Horror Picture Show", year: 1975, url: "https://en.wikipedia.org/wiki/The_Rocky_Horror_Picture_Show" },
+  { title: "The Watermelon Woman", year: 1996, url: "https://en.wikipedia.org/wiki/The_Watermelon_Woman" },
+  { title: "Weekend", year: 2011, url: "https://en.wikipedia.org/wiki/Weekend_(2011_film)" },
 ];
 
 const productionCompanies = [
@@ -1142,8 +1173,8 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     movieLocation: function () {
       var templates = [
-        escapeHtml(annotationMovie) + ' was filmed on location in ' + annotationCity + '.',
-        'The motion picture ' + escapeHtml(annotationMovie) + ' was produced on location in ' + annotationCity + '.',
+        escapeHtml(movie.title) + ' was filmed on location in ' + annotationCity + '.',
+        'The motion picture ' + escapeHtml(movie.title) + ' was produced on location in ' + annotationCity + '.',
         'Based on actual events, this film was shot on location in ' + annotationCity + '.'
       ];
       return templates[Math.floor(Math.random() * templates.length)];
@@ -1185,8 +1216,34 @@ document.addEventListener('DOMContentLoaded', function () {
         html += '<br><span class="annotation-attribution">\u2014 ' + escapeHtml(pick.author) + '</span>';
       }
       return html;
+    },
+    year: function () {
+      var company = productionCompanies[Math.floor(Math.random() * productionCompanies.length)];
+      var templates = [
+        '\u00A9 ' + movie.year + ' All Rights Reserved.',
+        toRoman(movie.year),
+        'A ' + toRoman(movie.year) + ' Film',
+        '\u00A9 ' + movie.year + ' ' + company + '. All Rights Reserved.'
+      ];
+      return templates[Math.floor(Math.random() * templates.length)];
     }
   };
+
+  function toRoman(n) {
+    var map = [
+      [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+      [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+      [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']
+    ];
+    var result = '';
+    for (var i = 0; i < map.length; i++) {
+      while (n >= map[i][0]) {
+        result += map[i][1];
+        n -= map[i][0];
+      }
+    }
+    return result;
+  }
 
   var annCount = 3 + Math.floor(Math.random() * 5);
   var activeAnnotationKeys = shuffle(Object.keys(annotationTypes)).slice(0, annCount);
@@ -1706,8 +1763,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  var movie = shuffle([...movies])[0];
+
   var annotationCity = cities[Math.floor(Math.random() * cities.length)].name;
-  var annotationMovie = movies[Math.floor(Math.random() * movies.length)].title;
 
   var annotationsHtml = '';
   activeAnnotationKeys.forEach(function (key) {
@@ -1722,8 +1780,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (annotationsHtml) {
     annotationsHtml = '<div class="annotations">' + annotationsHtml + '</div>';
   }
-
-  var movie = shuffle([...movies])[0];
 
   var openingHtml = '';
   if (Math.random() < 0.5) {
