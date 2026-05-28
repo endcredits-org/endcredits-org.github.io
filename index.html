@@ -469,7 +469,49 @@ h3 a {
 .wl-article .wl-m { color: #fff; }
 .wl-article .wl-c { color: #F5A9B8; }
 
-#credits-content:has(.cn:hover) {
+.memorial-card {
+  text-align: center;
+  margin: 60px auto;
+  max-width: 800px;
+}
+.memorial-card .memorial-label {
+  font-size: 0.9em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.memorial-card .memorial-name {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.memorial-card .memorial-years {
+  font-size: 0.95em;
+  margin-top: 6px;
+  color: #ccc;
+}
+
+.in-memoriam {
+  max-width: 800px;
+  margin: 40px auto;
+}
+.in-memoriam .credit {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-weight: bold;
+  font-size: 1.1em;
+  line-height: 1.3;
+}
+.in-memoriam .role {
+  text-align: left;
+}
+.in-memoriam .name {
+  text-align: right;
+  font-weight: normal;
+}
+
+#credits-content:has(.cn:hover),
+#credits-content:has(.memorial-card:hover) {
   animation-play-state: paused !important;
 }
 
@@ -1304,6 +1346,69 @@ const productionBabies = [
 document.addEventListener('DOMContentLoaded', function () {
   var shuffled = shuffle([...names]);
 
+  var inmemoriamIds = [];
+  var urlParams = new URLSearchParams(window.location.search);
+  var inmemStr = urlParams.get('inmemoriam');
+  if (inmemStr) {
+    var parts = inmemStr.split(',').map(Number);
+    var seen = {};
+    parts.forEach(function(id) {
+      if (isNaN(id)) return;
+      if (id < 0) id = names.length + id;
+      if (id >= 0 && id < names.length && !seen[id]) {
+        seen[id] = true;
+        inmemoriamIds.push(id);
+      }
+    });
+  }
+
+  function parseMemYear(s) {
+    if (!s) return null;
+    var m = s.match(/(\d{4})/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  var openingInMemoriamHtml = '';
+  var inMemoriamHtml = '';
+
+  if (inmemoriamIds.length > 0) {
+    if (Math.random() < 0.5) {
+      var pickIdx = inmemoriamIds[Math.floor(Math.random() * inmemoriamIds.length)];
+      var pickName = names[pickIdx];
+      var pickInfo = birthDeath[pickName];
+      var oh = '<div class="memorial-card">';
+      oh += '<div class="memorial-label">In memory of</div>';
+      oh += '<div class="memorial-name">' + escapeHtml(pickName) + '</div>';
+      if (pickInfo) {
+        var pby = parseMemYear(pickInfo.born);
+        var pdy = parseMemYear(pickInfo.died);
+        if (pby || pdy) {
+          oh += '<div class="memorial-years">' + (pby || '?') + ' \u2013 ' + (pdy || '?') + '</div>';
+        }
+      }
+      oh += '</div>';
+      openingInMemoriamHtml = oh;
+    }
+
+    var mh = '<h2>In Memoriam</h2>';
+    inmemoriamIds.forEach(function(id) {
+      var n = names[id];
+      var info = birthDeath[n];
+      var by = info ? parseMemYear(info.born) : null;
+      var dy = info ? parseMemYear(info.died) : null;
+      var yrs = '';
+      if (by && dy) {
+        yrs = by + '\u2013' + dy;
+      } else if (dy) {
+        yrs = '\u2013' + dy;
+      } else if (by) {
+        yrs = by + '\u2013';
+      }
+      mh += '<div class="credit"><span class="role">' + escapeHtml(n) + '</span><span class="name">' + yrs + '</span></div>';
+    });
+    inMemoriamHtml = '<div class="in-memoriam">' + mh + '</div>';
+  }
+
   function randomLayout() {
     var layouts = ['layout-classic', 'layout-justified', 'layout-single'];
     return layouts[Math.floor(Math.random() * layouts.length)];
@@ -2047,9 +2152,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var mainWrap = '<div class="' + ['layout-classic', 'layout-justified', 'layout-single'][Math.floor(Math.random() * 3)] + '">';
   var castWrap = '<div class="' + castLayout + '">';
   if (castFirst) {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
+    var html = openingHtml + openingInMemoriamHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + castWrap + castHtml + '</div>' + deptSectionsHtml + cityHtml + filmedAtHtml + musicHtml + inMemoriamHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
   } else {
-    var html = openingHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
+    var html = openingHtml + openingInMemoriamHtml + prodCoHtml + mainWrap + mainCrewHtml + '</div>' + deptSectionsHtml + castWrap + castHtml + '</div>' + cityHtml + filmedAtHtml + musicHtml + inMemoriamHtml + specialThanksHtml + productionBabiesHtml + annotationsHtml;
   }
 
   document.querySelector('.movie-title').innerHTML = '<a href="' + movie.url + '" target="_blank" rel="noopener">' + escapeHtml(movie.title) + '</a>';
