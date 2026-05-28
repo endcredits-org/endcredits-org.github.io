@@ -1285,15 +1285,18 @@ document.addEventListener('DOMContentLoaded', function () {
   var inmemoriamIds = [];
   var urlParams = new URLSearchParams(window.location.search);
   var inmemStr = urlParams.get('inmemoriam');
-  if (inmemStr) {
+  if (inmemStr !== 'off') {
     /* ?inmemoriam= syntax (comma-separated):
          <num>          - single 0-based index
          -<num>         - negative index from end (-1 = last)
          <a>:<b>        - range from a to b inclusive (preserves direction)
          y<YYYY>        - all with death year YYYY
          m<YYYY>-<MM>   - all with death in month MM of year YYYY
+         off            - disable In Memoriam (sole value only)
+       Defaults to y<current_year> if parameter is absent.
        Examples: 0,5,-1,-1:-10,y2026,m2026-04,m2026-04,m2026-05 */
-    var parts = inmemStr.split(',');
+    var query = inmemStr || 'y' + new Date().getFullYear();
+    var parts = query.split(',');
     var seen = {};
     parts.forEach(function(part) {
       if (part.charAt(0) === 'y') {
