@@ -389,12 +389,12 @@ h3 a {
   text-decoration: none;
 }
 
-.name a[data-info], .annotation a[data-info] {
+[data-info] {
   position: relative;
   cursor: help;
 }
 
-.name a[data-info]:hover::after, .annotation a[data-info]:hover::after {
+[data-info]::after {
   content: attr(data-info);
   position: absolute;
   left: 50%;
@@ -413,9 +413,12 @@ h3 a {
   letter-spacing: 0.04em;
   font-weight: normal;
   line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s 1.5s, visibility 0s 1.5s;
 }
 
-.name a[data-info]:hover::before, .annotation a[data-info]:hover::before {
+[data-info]::before {
   content: '';
   position: absolute;
   left: 50%;
@@ -425,9 +428,43 @@ h3 a {
   border-top-color: rgba(10,10,10,0.95);
   pointer-events: none;
   z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s 1.5s, visibility 0s 1.5s;
 }
 
-#credits-content:has(a[data-info]:hover) {
+.cn:hover [data-info]::after,
+.cn:hover [data-info]::before {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0s 0s, visibility 0s 0s;
+}
+
+.cn {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.wl {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0s 1.5s;
+  font-size: 0.65em;
+  color: #666;
+  text-decoration: none;
+  white-space: nowrap;
+  padding-left: 3px;
+}
+
+.cn:hover .wl {
+  opacity: 1;
+  transition: opacity 0s 0s;
+}
+
+#credits-content:has(.cn:hover) {
   animation-play-state: paused !important;
 }
 
@@ -1018,7 +1055,7 @@ function wikiLink(name) {
     if (info.region) label += ' \u00b7 ' + info.region;
     attrs = ' data-info="' + escapeHtml(label) + '"';
   }
-  return '<a href="https://en.wikipedia.org/wiki/List_of_people_killed_for_being_transgender" target="_blank" rel="noopener"' + attrs + '>' + escapeHtml(name) + '</a>';
+  return '<span class="cn"><span' + attrs + '>' + escapeHtml(name) + '</span><a class="wl" href="https://en.wikipedia.org/wiki/List_of_people_killed_for_being_transgender" target="_blank" rel="noopener">[W]</a></span>';
 }
 
 const cities = [
