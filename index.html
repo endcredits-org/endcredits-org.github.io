@@ -1286,11 +1286,47 @@ document.addEventListener('DOMContentLoaded', function () {
   var urlParams = new URLSearchParams(window.location.search);
   var inmemStr = urlParams.get('inmemoriam');
   if (inmemStr) {
+    /* ?inmemoriam= syntax (comma-separated):
+         <num>          - single 0-based index
+         -<num>         - negative index from end (-1 = last)
+         <a>:<b>        - range from a to b inclusive (preserves direction)
+         y<YYYY>        - all with death year YYYY
+         m<YYYY>-<MM>   - all with death in month MM of year YYYY
+       Examples: 0,5,-1,-1:-10,y2026,m2026-04,m2026-04,m2026-05 */
     var parts = inmemStr.split(',');
     var seen = {};
     parts.forEach(function(part) {
-      var rangeParts = part.split(':');
-      if (rangeParts.length === 2 && rangeParts[0] !== '' && rangeParts[1] !== '') {
+      if (part.charAt(0) === 'y') {
+        var ySel = parseInt(part.slice(1), 10);
+        if (!isNaN(ySel)) {
+          names.forEach(function(n, id) {
+            var info = memorialList[n];
+            if (info && parseMemYear(info.died) === ySel && !seen[id]) {
+              seen[id] = true;
+              inmemoriamIds.push(id);
+            }
+          });
+        }
+      } else if (part.charAt(0) === 'm') {
+        var mp = part.slice(1).split('-');
+        if (mp.length === 2) {
+          var ySel = parseInt(mp[0], 10);
+          var mSel = parseInt(mp[1], 10);
+          if (!isNaN(ySel) && !isNaN(mSel) && mSel >= 1 && mSel <= 12) {
+            var monthAbbr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mSel - 1];
+            var mRegex = new RegExp(monthAbbr + '\\s+' + ySel);
+            names.forEach(function(n, id) {
+              var info = memorialList[n];
+              if (info && info.died && mRegex.test(info.died) && !seen[id]) {
+                seen[id] = true;
+                inmemoriamIds.push(id);
+              }
+            });
+          }
+        }
+      } else {
+        var rangeParts = part.split(':');
+        if (rangeParts.length === 2 && rangeParts[0] !== '' && rangeParts[1] !== '') {
         var a = Number(rangeParts[0]), b = Number(rangeParts[1]);
         if (isNaN(a) || isNaN(b)) return;
         if (a < 0) a = names.length + a;
@@ -1310,6 +1346,7 @@ document.addEventListener('DOMContentLoaded', function () {
           seen[id] = true;
           inmemoriamIds.push(id);
         }
+      }
       }
     });
   }
