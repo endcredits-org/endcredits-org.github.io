@@ -464,6 +464,14 @@ h3 a {
   transition: opacity 0s 0s;
 }
 
+.cn.instant [data-info]::after,
+.cn.instant [data-info]::before,
+.cn.instant .wl {
+  transition: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
 .wl-article { font-weight: bold; }
 .wl-article .wl-o { color: #55CDFC; }
 .wl-article .wl-m { color: #fff; }
@@ -1321,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var memLabels = ['In memory of', 'In loving memory of', 'Dedicated to the memory of'];
       var memLabel = memLabels[Math.floor(Math.random() * memLabels.length)];
       oh += '<div class="memorial-label">' + memLabel + '</div>';
-      oh += '<div class="memorial-name">' + escapeHtml(pickName) + '</div>';
+      oh += '<div class="memorial-name">' + wikiLink(pickName) + '</div>';
       if (pickInfo) {
         var pby = parseMemYear(pickInfo.born);
         var pdy = parseMemYear(pickInfo.died);
@@ -2257,6 +2265,24 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       location.reload();
     }, delay);
+  });
+
+  document.addEventListener('mouseover', function(e) {
+    var cn = e.target.closest('.cn');
+    if (cn) {
+      document.querySelectorAll('.cn.instant').forEach(function(el) {
+        el.classList.remove('instant');
+      });
+    }
+  });
+  document.addEventListener('mouseout', function(e) {
+    var cn = e.target.closest('.cn');
+    if (cn && !cn.contains(e.relatedTarget)) {
+      cn.classList.add('instant');
+      requestAnimationFrame(function() {
+        cn.classList.remove('instant');
+      });
+    }
   });
 });
 </script>
