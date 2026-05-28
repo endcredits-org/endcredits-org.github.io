@@ -500,16 +500,16 @@ h3 a {
 .in-memoriam .role {
   font-weight: bold;
 }
-.in-memoriam.layout-classic .role {
+.mem-entries.layout-classic .role {
   text-align: left;
 }
-.in-memoriam.layout-classic .name {
+.mem-entries.layout-classic .name {
   text-align: right;
 }
-.in-memoriam.layout-wall .credit {
+.mem-entries.layout-wall .credit {
   font-weight: bold;
 }
-.in-memoriam.layout-wall .role {
+.mem-entries.layout-wall .role {
   font-weight: bold;
   font-size: 1em;
 }
@@ -1337,7 +1337,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var memLayout = memLayouts[Math.floor(Math.random() * memLayouts.length)];
     var memHeadings = ['In Memoriam', 'In Memory', 'Dedicated to'];
     var memHeading = memHeadings[Math.floor(Math.random() * memHeadings.length)];
-    var mh = '<h2>' + memHeading + '</h2>';
+    var mh = '';
     inmemoriamIds.forEach(function(id) {
       var n = names[id];
       var info = memorialList[n];
@@ -1351,9 +1351,9 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (by) {
         yrs = by + '\u2013';
       }
-      mh += '<div class="credit"><span class="role">' + escapeHtml(n) + '</span><span class="name">' + yrs + '</span></div>';
+      mh += '<div class="credit"><span class="role">' + wikiLink(n) + '</span><span class="name">' + yrs + '</span></div>';
     });
-    inMemoriamHtml = '<div class="in-memoriam ' + memLayout + '">' + mh + '</div>';
+    inMemoriamHtml = '<div class="in-memoriam"><h2>' + memHeading + '</h2><div class="mem-entries ' + memLayout + '">' + mh + '</div></div>';
   }
 
   function randomLayout() {
