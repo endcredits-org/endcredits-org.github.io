@@ -350,12 +350,52 @@ h3 a {
   font-weight: bold;
 }
 
-.credit a, .featured-card a {
+.credit a, .featured-card a, .annotation a {
   color: inherit;
   text-decoration: none;
 }
 
+.name a[data-info], .annotation a[data-info] {
+  position: relative;
+  cursor: help;
+}
 
+.name a[data-info]:hover::after, .annotation a[data-info]:hover::after {
+  content: attr(data-info);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  background: rgba(10,10,10,0.95);
+  color: #eee;
+  font-size: 0.78em;
+  white-space: nowrap;
+  padding: 5px 11px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+  pointer-events: none;
+  z-index: 100;
+  letter-spacing: 0.04em;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+.name a[data-info]:hover::before, .annotation a[data-info]:hover::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(10,10,10,0.95);
+  pointer-events: none;
+  z-index: 100;
+}
+
+#credits-content:has(a[data-info]:hover) {
+  animation-play-state: paused !important;
+}
 
 .movie-title {
   line-height: 1.3;
@@ -454,6 +494,88 @@ const names = [
   "Juniper Blessing",
   "Eryka Caldwell"
 ];
+
+const birthDeath = {
+  "Liddy Bacroff":                   { born: "19 Aug 1908", died: "6 Jan 1943",           region: "Germany" },
+  "H. Bode":                         { born: null,        died: "c. 1943",                region: "Germany" },
+  "Sanro Makgangke":                 { born: null,        died: "c. 1965",                region: "Indonesia" },
+  "Tanya Moore":                     { born: null,        died: "3 Jul 1986",             region: "Pennsylvania, US" },
+  "Tina Rodriguez":                  { born: null,        died: "3 Jul 1986",             region: "Pennsylvania, US" },
+  "Sonia Rescalvo Zafra":            { born: "c. 1946",   died: "6 Oct 1991",             region: "Spain" },
+  "Brandon Teena":                   { born: "12 Dec 1972", died: "31 Dec 1993",          region: "Nebraska, US" },
+  "Chanelle Pickett":                { born: "c. 1972",   died: "20 Nov 1995",            region: "Massachusetts, US" },
+  "Deborah \"Debbie\" Forte":        { born: "c. 1940",   died: "15 May 1996",            region: "Massachusetts, US" },
+  "Rita Hester":                     { born: "30 Nov 1963", died: "28 Nov 1998",          region: "Massachusetts, US" },
+  "Amanda Milan":                    { born: "c. 1975",   died: "20 Jun 2000",            region: "New York, US" },
+  "Fred Martinez Jr.":               { born: "15 Mar 1985", died: "16 Jun 2001",          region: "Colorado, US" },
+  "Gwen Araujo":                     { born: "24 Feb 1985", died: "4 Oct 2002",           region: "California, US" },
+  "Nireah Johnson":                  { born: "c. 1986",   died: "2003",                   region: "Indiana, US" },
+  "Brandie Coleman":                 { born: "c. 1986",   died: "2003",                   region: "Indiana, US" },
+  "Janice Roberts":                  { born: null,        died: "18 Jun 2003",            region: "Connecticut, US" },
+  "Shelby Tracy Tom":                { born: null,        died: "27 May 2003",            region: "British Columbia, Canada" },
+  "Gisberta Salce J\u00fanior":      { born: "c. 1960",   died: "Feb 2006",               region: "Portugal" },
+  "Roberto Gonz\u00e1lez Onrubia":   { born: null,        died: "29 Aug 2007",            region: "Spain" },
+  "Angie Zapata":                    { born: "5 Aug 1989", died: "17 Jul 2008",            region: "Colorado, US" },
+  "Vicky Hern\u00e1ndez":            { born: "c. 1983",   died: "2009",                   region: "Honduras" },
+  "Victoria Carmen White":           { born: null,        died: "12 Sep 2010",            region: "New Jersey, US" },
+  "Dee Dee Pearson":                 { born: null,        died: "24 Dec 2011",            region: "Missouri, US" },
+  "Svetlana":                        { born: null,        died: "2011",                   region: "Russia" },
+  "Brandy Martell":                  { born: "c. 1975",   died: "29 Apr 2012",            region: "California, US" },
+  "Carmen Guerrero":                 { born: null,        died: "2013",                   region: "California, US" },
+  "Islan Nettles":                   { born: "c. 1992",   died: "22 Aug 2013",            region: "New York, US" },
+  "Dwayne Jones":                    { born: "c. 1997",   died: "22 Jul 2013",            region: "Jamaica" },
+  "Jennifer Laude":                  { born: "4 Nov 1987", died: "11 Oct 2014",            region: "Philippines" },
+  "\u00c7a\u011fla Joker":           { born: null,        died: "21 Apr 2014",            region: "Turkey" },
+  "Kimberly Sody":                   { born: "c. 1986",   died: "Oct 2014",               region: "Dominican Republic" },
+  "Cenida Ramos":                    { born: "c. 1996",   died: "12 Jan 2014",            region: "Belize" },
+  "Mercedes Williamson":             { born: "c. 1998",   died: "30 May 2015",            region: "Mississippi, US" },
+  "Diana Sacay\u00e1n":              { born: "31 Dec 1975", died: "11 Oct 2015",          region: "Argentina" },
+  "Paola Ledezma":                   { born: "c. 1989",   died: "30 Sep 2016",            region: "Mexico" },
+  "Rae'Lynn Thomas":                 { born: "c. 1988",   died: "10 Aug 2016",            region: "Ohio, US" },
+  "Jessica Mendes Cavalcanti":       { born: "c. 1992",   died: "19 Apr 2016",            region: "Brazil" },
+  "Amna":                            { born: "c. 1982",   died: "28 Feb 2017",            region: "Saudi Arabia" },
+  "Meeno":                           { born: "c. 1991",   died: "28 Feb 2017",            region: "Saudi Arabia" },
+  "Chanda Sharmeeli":                { born: "c. 1987",   died: "30 Aug 2017",            region: "Pakistan" },
+  "Bianca":                          { born: "c. 1985",   died: "29 Sep 2017",            region: "Netherlands" },
+  "Dandara dos Santos":              { born: "c. 1975",   died: "Feb 2017",               region: "Brazil" },
+  "Wilka":                           { born: "c. 1977",   died: "26 Mar 2017",            region: "Brazil" },
+  "Laysa Fortuna":                   { born: "c. 1993",   died: "18 Oct 2018",            region: "Brazil" },
+  "Nataly Briyth S\u00e1nchez":     { born: null,        died: "19 Jun 2018",            region: "Mexico" },
+  "Kelly Stough":                    { born: "c. 1982",   died: "Dec 2018",               region: "Michigan, US" },
+  "Anastasiya Sapaeva":              { born: "c. 1975",   died: "2018",                   region: "Russia" },
+  "Nikki Kuhnhausen":                { born: "6 Jul 2001", died: "6 Jun 2019",            region: "Washington, US" },
+  "Nina Surgutskaya":                { born: "c. 1994",   died: "2019",                   region: "Russia" },
+  "Chynal Lindsey":                  { born: "c. 1993",   died: "1 Jun 2019",             region: "Texas, US" },
+  "Dime Doe":                        { born: "16 Nov 1994", died: "4 Aug 2019",           region: "South Carolina, US" },
+  "Alexa Luciano Ruiz":              { born: null,        died: "24 Feb 2020",            region: "Puerto Rico, US" },
+  "Selena Reyes-Hernandez":          { born: "c. 1983",   died: "31 May 2020",            region: "Illinois, US" },
+  "Brayla Stone":                    { born: "c. 2003",   died: "Jun 2020",               region: "Arkansas, US" },
+  "Valera":                          { born: "c. 1974",   died: "10 Feb 2020",            region: "Russia" },
+  "Serena Angelique Vel\u00e1zquez": { born: "c. 1988",   died: "22 Apr 2020",            region: "Puerto Rico, US" },
+  "Layla Pelaez":                    { born: "c. 1999",   died: "22 Apr 2020",            region: "Puerto Rico, US" },
+  "Tehuel de la Torre":              { born: null,        died: "11 Mar 2021",            region: "Argentina" },
+  "Ebeng Mayor":                     { born: null,        died: "20 May 2021",            region: "Philippines" },
+  "Doski Azad":                      { born: "c. 1999",   died: "2022",                   region: "Iraq" },
+  "Luo":                             { born: null,        died: "2022",                   region: "China" },
+  "Ariyanna Mitchell":               { born: "c. 2005",   died: "2022",                   region: "Virginia, US" },
+  "Cherry Bush":                     { born: "c. 1974",   died: "2022",                   region: "California, US" },
+  "Daniel Aston":                    { born: "c. 1994",   died: "19 Nov 2022",            region: "Colorado, US" },
+  "Kelly Loving":                    { born: "c. 1969",   died: "19 Nov 2022",            region: "Colorado, US" },
+  "Brianna Ghey":                    { born: "7 Nov 2006", died: "11 Feb 2023",           region: "England, UK" },
+  "Abuja Area Mama":                 { born: null,        died: "8 Aug 2024",             region: "Nigeria" },
+  "Kesaria Abramidze":               { born: "18 Aug 1987", died: "18 Sep 2024",          region: "Georgia" },
+  "Sara Millerey Gonz\u00e1lez":     { born: "c. 1993",   died: "Apr 2025",               region: "Colombia" },
+  "Daquan \"Dream\" Johnson":        { born: "c. 1997",   died: "Jul 2025",               region: "Washington, D.C., US" },
+  "Davonta Curtis":                  { born: "c. 1995",   died: "5 Apr 2026",             region: "Illinois, US" },
+  "Shyyell Diamond Sanchez-McCray":  { born: "c. 1984",   died: "13 Mar 2026",            region: "Virginia, US" },
+  "Danielle Spillman":               { born: "c. 1952",   died: "13 Apr 2026",            region: "California, US" },
+  "Aleanna Belcher":                 { born: null,        died: "25 May 2026",            region: "Texas, US" },
+  "Lucas Knapp":                     { born: "c. 1987",   died: "18 Apr 2026",            region: "New Mexico, US" },
+  "Lanessa Rodriguez":               { born: "c. 1991",   died: "28 Apr 2026",            region: "Florida, US" },
+  "Hailey Singleton":                { born: "c. 1997",   died: "5 May 2026",             region: "Florida, US" },
+  "Juniper Blessing":                { born: "c. 2007",   died: "10 May 2026",            region: "Washington, US" },
+  "Eryka Caldwell":                  { born: "c. 1985",   died: "17 May 2026",            region: "New York, US" }
+};
 
 const characters = [
   "The Hero",
@@ -831,7 +953,28 @@ function escapeHtml(str) {
 }
 
 function wikiLink(name) {
-  return '<a href="https://en.wikipedia.org/wiki/List_of_people_killed_for_being_transgender" target="_blank" rel="noopener">' + escapeHtml(name) + '</a>';
+  function parseYear(s) {
+    if (!s) return null;
+    var m = s.match(/(\d{4})/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+  var info = birthDeath[name];
+  var attrs = '';
+  if (info && (info.born || info.died)) {
+    var label = '';
+    if (info.born && info.died) {
+      var by = parseYear(info.born), dy = parseYear(info.died);
+      var age = (by && dy) ? ' (' + (dy - by) + ')' : '';
+      label = '\u2605 ' + info.born + ' \u25CB ' + info.died + age;
+    } else if (info.died) {
+      label = 'd. ' + info.died;
+    } else if (info.born) {
+      label = 'b. ' + info.born;
+    }
+    if (info.region) label += ' \u00b7 ' + info.region;
+    attrs = ' data-info="' + escapeHtml(label) + '"';
+  }
+  return '<a href="https://en.wikipedia.org/wiki/List_of_people_killed_for_being_transgender" target="_blank" rel="noopener"' + attrs + '>' + escapeHtml(name) + '</a>';
 }
 
 const cities = [
@@ -1770,7 +1913,11 @@ document.addEventListener('DOMContentLoaded', function () {
   var annotationsHtml = '';
   activeAnnotationKeys.forEach(function (key) {
     var val = annotationTypes[key];
-    if (key === 'quotes') {
+    if (key === 'dedication') {
+      var text = val();
+      var parts = text.split(dedicationName);
+      annotationsHtml += '<div class="annotation">' + escapeHtml(parts[0]) + wikiLink(dedicationName) + escapeHtml(parts[1]) + '</div>';
+    } else if (key === 'quotes') {
       annotationsHtml += '<div class="annotation">' + val() + '</div>';
     } else {
       var text = typeof val === 'function' ? val() : val[Math.floor(Math.random() * val.length)];
