@@ -1318,7 +1318,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var pickName = names[pickIdx];
       var pickInfo = memorialList[pickName];
       var oh = '<div class="memorial-card">';
-      oh += '<div class="memorial-label">In memory of</div>';
+      var memLabels = ['In memory of', 'In loving memory of', 'Dedicated to the memory of'];
+      var memLabel = memLabels[Math.floor(Math.random() * memLabels.length)];
+      oh += '<div class="memorial-label">' + memLabel + '</div>';
       oh += '<div class="memorial-name">' + escapeHtml(pickName) + '</div>';
       if (pickInfo) {
         var pby = parseMemYear(pickInfo.born);
@@ -1333,7 +1335,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var memLayouts = ['layout-justified', 'layout-single', 'layout-classic', 'layout-wall'];
     var memLayout = memLayouts[Math.floor(Math.random() * memLayouts.length)];
-    var mh = '<h2>In Memoriam</h2>';
+    var memHeadings = ['In Memoriam', 'In Memory', 'Dedicated to'];
+    var memHeading = memHeadings[Math.floor(Math.random() * memHeadings.length)];
+    var mh = '<h2>' + memHeading + '</h2>';
     inmemoriamIds.forEach(function(id) {
       var n = names[id];
       var info = memorialList[n];
