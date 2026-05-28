@@ -539,88 +539,7 @@ h3 a {
 </div>
 <div id="title-overlay"><div class="movie-title"></div><div id="flag"></div></div>
 <script>
-const names = [
-  "Liddy Bacroff",
-  "H. Bode",
-  "Sanro Makgangke",
-  "Tanya Moore",
-  "Tina Rodriguez",
-  "Sonia Rescalvo Zafra",
-  "Brandon Teena",
-  "Chanelle Pickett",
-  "Deborah \"Debbie\" Forte",
-  "Rita Hester",
-  "Amanda Milan",
-  "Fred Martinez Jr.",
-  "Gwen Araujo",
-  "Nireah Johnson",
-  "Brandie Coleman",
-  "Janice Roberts",
-  "Shelby Tracy Tom",
-  "Gisberta Salce Júnior",
-  "Roberto González Onrubia",
-  "Angie Zapata",
-  "Vicky Hernández",
-  "Victoria Carmen White",
-  "Dee Dee Pearson",
-  "Svetlana",
-  "Brandy Martell",
-  "Carmen Guerrero",
-  "Islan Nettles",
-  "Dwayne Jones",
-  "Jennifer Laude",
-  "Çağla Joker",
-  "Kimberly Sody",
-  "Cenida Ramos",
-  "Mercedes Williamson",
-  "Diana Sacayán",
-  "Paola Ledezma",
-  "Rae'Lynn Thomas",
-  "Jessica Mendes Cavalcanti",
-  "Amna",
-  "Meeno",
-  "Chanda Sharmeeli",
-  "Bianca",
-  "Dandara dos Santos",
-  "Wilka",
-  "Laysa Fortuna",
-  "Nataly Briyth Sánchez",
-  "Kelly Stough",
-  "Anastasiya Sapaeva",
-  "Nikki Kuhnhausen",
-  "Nina Surgutskaya",
-  "Chynal Lindsey",
-  "Dime Doe",
-  "Alexa Luciano Ruiz",
-  "Selena Reyes-Hernandez",
-  "Brayla Stone",
-  "Valera",
-  "Serena Angelique Velázquez",
-  "Layla Pelaez",
-  "Tehuel de la Torre",
-  "Ebeng Mayor",
-  "Doski Azad",
-  "Luo",
-  "Ariyanna Mitchell",
-  "Cherry Bush",
-  "Daniel Aston",
-  "Kelly Loving",
-  "Brianna Ghey",
-  "Abuja Area Mama",
-  "Kesaria Abramidze",
-  "Sara Millerey González",
-  "Daquan \"Dream\" Johnson",
-  "Shyyell Diamond Sanchez-McCray",
-  "Davonta Curtis",
-  "Danielle Spillman",
-  "Aleanna Belcher",
-  "Lucas Knapp",
-  "Lanessa Rodriguez",
-  "Juniper Blessing",
-  "Eryka Caldwell"
-];
-
-const birthDeath = {
+const memorialList = {
   "Liddy Bacroff":                   { born: "19 Aug 1908", died: "6 Jan 1943",           region: "Germany", wiki: "Liddy_Bacroff" },
   "H. Bode":                         { born: null,        died: "c. 1943",                region: "Germany" },
   "Sanro Makgangke":                 { born: null,        died: "c. 1965",                region: "Indonesia" },
@@ -702,6 +621,8 @@ const birthDeath = {
   "Eryka Caldwell":                  { born: "c. 1985",   died: "17 May 2026",            region: "New York, US" },
   "Murry Foust":                     { born: "c. 2004",   died: "24 May 2026",            region: "Kentucky, US" }
 };
+
+const names = Object.keys(memorialList);
 
 const characters = [
   "The Hero",
@@ -1086,7 +1007,7 @@ function wikiLink(name) {
     var m = s.match(/(\d{4})/);
     return m ? parseInt(m[1], 10) : null;
   }
-  var info = birthDeath[name];
+  var info = memorialList[name];
   var attrs = '';
   if (info && (info.born || info.died)) {
     var label = '';
@@ -1375,7 +1296,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (Math.random() < 0.5) {
       var pickIdx = inmemoriamIds[Math.floor(Math.random() * inmemoriamIds.length)];
       var pickName = names[pickIdx];
-      var pickInfo = birthDeath[pickName];
+      var pickInfo = memorialList[pickName];
       var oh = '<div class="memorial-card">';
       oh += '<div class="memorial-label">In memory of</div>';
       oh += '<div class="memorial-name">' + escapeHtml(pickName) + '</div>';
@@ -1393,7 +1314,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var mh = '<h2>In Memoriam</h2>';
     inmemoriamIds.forEach(function(id) {
       var n = names[id];
-      var info = birthDeath[n];
+      var info = memorialList[n];
       var by = info ? parseMemYear(info.born) : null;
       var dy = info ? parseMemYear(info.died) : null;
       var yrs = '';
